@@ -10285,8 +10285,11 @@ function addCart(id){
   const p=products.find(x=>x.id===id);
   if(!p||p.stock===0)return;
   if(cart[id])cart[id].qty+=1;else cart[id]={...p,qty:1};
-  updateCart();renderGrid();
+  updateCart();
+  const btn=document.querySelector(`.btn-add[onclick="addCart(${id})"]`);
+  if(btn){btn.textContent='✓ En carrito';btn.classList.add('added');}
   showToast(`✓ ${p.name} agregado`);
+
 }
 function removeCart(id){delete cart[id];updateCart();renderGrid();}
 function changeQty(id,d){
@@ -10827,7 +10830,8 @@ function sendToWhatsApp(){
   let text = `Hola! Quisiera realizar el siguiente pedido:\n\n${msg}\n\n`;
   if(_checkoutDiscountPct > 0){
     text += `💰 Subtotal: ${fmt(total)}\n`;
-    text += `🎟️ Descuento ${_checkoutDiscountPct}%: -${fmt(descuento)}\n`;
+    const codigoUsado = document.getElementById('checkout-code-input').value.toUpperCase().trim();
+text += `🎟️ Código: ${codigoUsado} (${_checkoutDiscountPct}% desc.): -${fmt(descuento)}\n`;
     text += `✅ TOTAL CON DESCUENTO: ${fmt(totalFinal)} (Efectivo / Transferencia)\n`;
   } else {
     text += `✅ TOTAL: ${fmt(totalFinal)} (Efectivo / Transferencia)\n`;
