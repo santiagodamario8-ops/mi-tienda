@@ -11186,8 +11186,7 @@ let firebaseLoaded = false;
 
 function checkAllLoaded(){
   if(sheetsLoaded && firebaseLoaded){
-    if(allLoadedCalled) return; //
-     evitar doble ejecución
+    if(allLoadedCalled) return; //evitar doble ejecución
     allLoadedCalled = true;
     if(typeof renderCats === 'function') renderCats();
     if(typeof renderGrid === 'function') renderGrid();
