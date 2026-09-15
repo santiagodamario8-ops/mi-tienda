@@ -336,9 +336,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   @keyframes spin{to{transform:rotate(360deg)}}
 
 </style>
-<style type="text/css">.resize-observer[data-v-8859cc6c]{position:absolute;top:0;left:0;z-index:-1;width:100%;height:100%;border:none;background-color:transparent;pointer-events:none;display:block;overflow:hidden;opacity:0}.resize-observer[data-v-8859cc6c] object{display:block;position:absolute;top:0;left:0;height:100%;width:100%;overflow:hidden;pointer-events:none;z-index:-1}</style><style type="text/css">x-vue-echarts{display:flex;flex-direction:column;width:100%;height:100%;min-width:0}
+<style type="text/css">x-vue-echarts{display:flex;flex-direction:column;width:100%;height:100%;min-width:0}
 .vue-echarts-inner{flex-grow:1;min-width:0;width:auto!important;height:auto!important}
-</style><style type="text/css">.resize-observer[data-v-8859cc6c]{position:absolute;top:0;left:0;z-index:-1;width:100%;height:100%;border:none;background-color:transparent;pointer-events:none;display:block;overflow:hidden;opacity:0}.resize-observer[data-v-8859cc6c] object{display:block;position:absolute;top:0;left:0;height:100%;width:100%;overflow:hidden;pointer-events:none;z-index:-1}</style><style type="text/css">x-vue-echarts{display:flex;flex-direction:column;width:100%;height:100%;min-width:0}
+</style><style type="text/css">x-vue-echarts{display:flex;flex-direction:column;width:100%;height:100%;min-width:0}
 .vue-echarts-inner{flex-grow:1;min-width:0;width:auto!important;height:auto!important}
 </style>
   <!-- Firebase via REST (sin WebSocket) -->
@@ -347,18 +347,19 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     const FB_KEY = "AIzaSyCLGkiDKxKrIE-a27hpeAmS-PPx-4sE2ho";
   </script>
 
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231e5bb5'/%3E%3Ctext x='32' y='45' font-family='Arial,Helvetica,sans-serif' font-size='36' font-weight='700' fill='white' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<style type="text/css">.resize-observer[data-v-8859cc6c]{position:absolute;top:0;left:0;z-index:-1;width:100%;height:100%;border:none;background-color:transparent;pointer-events:none;display:block;overflow:hidden;opacity:0}.resize-observer[data-v-8859cc6c] object{display:block;position:absolute;top:0;left:0;height:100%;width:100%;overflow:hidden;pointer-events:none;z-index:-1}</style><style type="text/css">x-vue-echarts{display:flex;flex-direction:column;width:100%;height:100%;min-width:0}
+<style type="text/css">x-vue-echarts{display:flex;flex-direction:column;width:100%;height:100%;min-width:0}
 .vue-echarts-inner{flex-grow:1;min-width:0;width:auto!important;height:auto!important}
-</style><style type="text/css">.resize-observer[data-v-8859cc6c]{position:absolute;top:0;left:0;z-index:-1;width:100%;height:100%;border:none;background-color:transparent;pointer-events:none;display:block;overflow:hidden;opacity:0}.resize-observer[data-v-8859cc6c] object{display:block;position:absolute;top:0;left:0;height:100%;width:100%;overflow:hidden;pointer-events:none;z-index:-1}</style><style type="text/css">x-vue-echarts{display:flex;flex-direction:column;width:100%;height:100%;min-width:0}
+</style><style type="text/css">x-vue-echarts{display:flex;flex-direction:column;width:100%;height:100%;min-width:0}
 .vue-echarts-inner{flex-grow:1;min-width:0;width:auto!important;height:auto!important}
-</style><style type="text/css">.resize-observer[data-v-8859cc6c]{position:absolute;top:0;left:0;z-index:-1;width:100%;height:100%;border:none;background-color:transparent;pointer-events:none;display:block;overflow:hidden;opacity:0}.resize-observer[data-v-8859cc6c] object{display:block;position:absolute;top:0;left:0;height:100%;width:100%;overflow:hidden;pointer-events:none;z-index:-1}</style><style type="text/css">x-vue-echarts{display:flex;flex-direction:column;width:100%;height:100%;min-width:0}
+</style><style type="text/css">x-vue-echarts{display:flex;flex-direction:column;width:100%;height:100%;min-width:0}
 .vue-echarts-inner{flex-grow:1;min-width:0;width:auto!important;height:auto!important}
-</style><style type="text/css">.resize-observer[data-v-8859cc6c]{position:absolute;top:0;left:0;z-index:-1;width:100%;height:100%;border:none;background-color:transparent;pointer-events:none;display:block;overflow:hidden;opacity:0}.resize-observer[data-v-8859cc6c] object{display:block;position:absolute;top:0;left:0;height:100%;width:100%;overflow:hidden;pointer-events:none;z-index:-1}</style><style type="text/css">x-vue-echarts{display:flex;flex-direction:column;width:100%;height:100%;min-width:0}
+</style><style type="text/css">x-vue-echarts{display:flex;flex-direction:column;width:100%;height:100%;min-width:0}
 .vue-echarts-inner{flex-grow:1;min-width:0;width:auto!important;height:auto!important}
 </style></head>
-<body ap-style="">
+<body>
 
 <!-- SPLASH LOADER -->
 <div id="fb-loading">
@@ -10323,7 +10324,7 @@ function renderCats(){
 }
 
 function getFiltered(){
-  let list=products;
+  let list=products.filter(p=>p.stock!==0);
   if(currentCat!=='all') list=list.filter(p=>Array.isArray(p.cat)?p.cat.includes(currentCat):p.cat===currentCat);
   if(searchQ) list=list.filter(p=>p.name.toLowerCase().includes(searchQ)||p.desc.toLowerCase().includes(searchQ));
   return list;
@@ -11141,6 +11142,23 @@ async function loadProductsFromSheets(){
       const imgUrl = imagenesMap[codigo] || '';
       const existing = products.find(x=>x.id === id);
 
+      // Stock desde la hoja STOCK: cualquier valor > 0 = con stock, 0/vacío/negativo = sin stock.
+      // Tolerante a texto (SI/NO, DISPONIBLE/AGOTADO) por si la columna no es puramente numérica.
+      let stockVal = 1; // por defecto con stock (si no hay dato, no ocultamos el producto)
+      const stockRaw = stockMap[codigo];
+      if(stockRaw !== undefined && stockRaw !== null && String(stockRaw).trim() !== ''){
+        const raw = String(stockRaw).trim();
+        const stockNum = parseFloat(raw.replace(',', '.').replace(/[^0-9.\-]/g,''));
+        if(!isNaN(stockNum) && raw.match(/[0-9]/)){
+          stockVal = stockNum > 0 ? 1 : 0;
+        } else if(/^(no|false|0|sin stock|agotado|sin unidades)$/i.test(raw)){
+          stockVal = 0;
+        } else if(/^(si|sí|true|disponible|con stock)$/i.test(raw)){
+          stockVal = 1;
+        }
+        // cualquier otro texto no reconocido: se deja en 1 (con stock) para no ocultar por error de formato
+      }
+
       newProducts.push({
         id,
         name: nombre,
@@ -11151,7 +11169,7 @@ async function loadProductsFromSheets(){
         off: descuento,
         cuotas,
         ncuotas,
-        stock: 1,
+        stock: stockVal,
         icon: existing ? existing.icon : '📦',
         cat: existing ? existing.cat : 'varios',
         imgUrl: imgUrl,
@@ -11536,4 +11554,4 @@ setTimeout(initData, 100);
   </div>
 </div>
 
-<div class="ap-ext ap-ext-taobao_search_by_image"><div translate="no" class="ap-base ap-base--ltr ap-theme--dark"><div><div class="ap-toolbar ap-toolbar--left ap-toolbar--expand"><!----><div class="ap-toolbar__inner"><!----></div></div></div><!----><div><!----><div class="ap-sbi"><!----><div class="ap-sbi-aside"><!----><div class="ap-sbi-aside-btn-minimize" style="display: none;"><img src="" class="ap-sbi-img-thumb"><i class="ap-sbi-aside-btn-minimize__icon ap-icon-chevron-right"></i></div><!----></div><!----><div class="ap-sbi-btn-search-wrapper" style="cursor: pointer; display: none;"><div class="ap-sbi-btn-search"><i class="ap-sbi-btn-search__icon ap-icon-search"></i><span class="ap-sbi-btn-search__txt">AiPrice</span></div><div class="ap-sbi-options"><div class="ap-sbi-options__label"><i class="ap-sbi-options__icon ap-icon-chevron-down"></i></div><!----></div></div></div><div><!----></div></div><div></div><div></div><div></div><!----><!----><!----><div></div><div></div><!----><!----></div></div></body></html>
+</body></html>
