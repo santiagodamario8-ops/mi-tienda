@@ -164,6 +164,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .ci-qty{display:flex;align-items:center;gap:8px;margin-top:6px}
 .qty-btn{width:28px;height:28px;border:1.5px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--blue2)}
 .qty-btn:hover{background:var(--bg);border-color:var(--blue3)}
+.qty-btn.at-max{opacity:.35;cursor:not-allowed}
+.ci-max{font-size:11px;color:#e65100;margin-top:4px;font-weight:600}
 .qty-num{font-size:14px;font-weight:700;min-width:20px;text-align:center}
 .ci-rm{background:none;border:none;cursor:pointer;color:#ccc;font-size:18px;padding:4px;margin-left:auto;align-self:flex-start}
 .ci-rm:hover{color:#e53935}
@@ -463,7 +465,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
             <option value="off">No visibles</option>
           </select>
         </div>
-        <div style="font-size:12px;color:var(--text3);margin-bottom:8px">El stock se toma de la planilla (hoja STOCK, columna K). Desde acá solo podés ocultar manualmente un producto que tenga stock.</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px">El stock se toma de la planilla (hoja STOCK, columna K). Desde acá solo podés ocultar manualmente un producto que tenga stock.<br>Nuevos ingresos: cada vez que abrís este panel se detectan los productos nuevos o repuestos (de 0 a más) y aparecen 7 días en "Nuevos ingresos".</div>
         <div style="font-size:12px;color:var(--text3);margin-bottom:8px" id="admin-prod-count"></div>
         <div class="admin-prod-list" id="admin-prod-list"></div>
       </div>
@@ -736,6 +738,25 @@ let products = [];
 
 let cart={}, currentCat='all', searchQ='';
 
+// NUEVOS INGRESOS
+const NEW_KEY = '__nuevos';
+const NEW_LABEL = '🆕 Nuevos ingresos';
+const NEW_SLUG = 'nuevos-ingresos';
+const NEW_DAYS = 7;
+let ingresosData = {};      // {id: timestamp ms} leído de Firebase (público)
+let stockLoadedOK = false;  // true si la hoja STOCK cargó bien
+let ingresosChecked = false;
+
+function getNuevos(){
+  const limit = Date.now() - NEW_DAYS*24*60*60*1000;
+  return products
+    .filter(p=>p.stock===1 && ingresosData[p.id] && ingresosData[p.id] >= limit)
+    .sort((a,b)=>ingresosData[b.id]-ingresosData[a.id]);
+}
+
+// Máximo que se puede pedir de un producto (columna K)
+function maxQty(p){ return (typeof p.qtyStock==='number' && isFinite(p.qtyStock)) ? p.qtyStock : Infinity; }
+
 function fmt(n){return '$'+Math.round(n).toLocaleString('es-AR')}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 function iconFor(p){const c=Array.isArray(p.cat)?p.cat[0]:p.cat;return CAT_ICON[c]||'📦';}
@@ -792,6 +813,7 @@ function cardHTML(p){
 function renderCats(){
   const bar=document.getElementById('cats-bar');
   let html=`<button class="cat-btn${currentCat==='all'?' active':''}" onclick="setCat('all',this)">Todos</button>`;
+  if(getNuevos().length) html+=`<button class="cat-btn${currentCat===NEW_KEY?' active':''}" onclick="setCat('${NEW_KEY}',this)">${NEW_LABEL}</button>`;
   catOrder.forEach(k=>{
     if(!catLabels[k])return;
     // Solo mostrar categorías que tengan al menos un producto visible
@@ -804,7 +826,8 @@ function renderCats(){
 function getFiltered(){
   // Solo productos con stock disponible (planilla STOCK col K) y no ocultos manualmente
   let list=products.filter(p=>p.stock===1);
-  if(currentCat!=='all') list=list.filter(p=>Array.isArray(p.cat)?p.cat.includes(currentCat):p.cat===currentCat);
+  if(currentCat===NEW_KEY) list=getNuevos();
+  else if(currentCat!=='all') list=list.filter(p=>Array.isArray(p.cat)?p.cat.includes(currentCat):p.cat===currentCat);
   if(searchQ) list=list.filter(p=>p.name.toLowerCase().includes(searchQ)||String(p.desc).toLowerCase().includes(searchQ)||String(p.id).includes(searchQ));
   return list;
 }
@@ -821,6 +844,7 @@ function renderGrid(){
     }
     return;
   }
+  if(currentCat===NEW_KEY && !getNuevos().length) currentCat='all';
   const filtered=getFiltered();
   countEl.textContent=`${filtered.length} producto${filtered.length!==1?'s':''}`;
   if(!filtered.length){
@@ -829,6 +853,8 @@ function renderGrid(){
   }
   if(currentCat==='all'&&!searchQ){
     let html='';
+    const nuevos=getNuevos();
+    if(nuevos.length) html+=`<div class="section-title">${NEW_LABEL}</div><div class="products-grid">${nuevos.map(p=>cardHTML(p)).join('')}</div>`;
     const shown=new Set();
     catOrder.forEach(cat=>{
       const cp=getOrderedProductsOfCat(cat).filter(p=>filtered.includes(p));
@@ -852,7 +878,7 @@ function setCat(cat,btn){
   renderGrid();
   window.scrollTo({top:0,behavior:'smooth'});
   if(cat==='all') window.history.pushState({},'','/');
-  else window.history.pushState({cat:cat},'',`/${cat}`);
+  else window.history.pushState({cat:cat},'',`/${cat===NEW_KEY?NEW_SLUG:cat}`);
 }
 
 function onSearch(q){searchQ=q.toLowerCase().trim();renderGrid();}
@@ -860,6 +886,8 @@ function onSearch(q){searchQ=q.toLowerCase().trim();renderGrid();}
 function addCart(id){
   const p=products.find(x=>x.id===id);
   if(!p||p.stock!==1)return;
+  const enCarrito=cart[id]?cart[id].qty:0;
+  if(enCarrito>=maxQty(p)){ showToast(`Solo quedan ${maxQty(p)} unidad${maxQty(p)!==1?'es':''} de este producto`); return; }
   if(cart[id])cart[id].qty+=1;else cart[id]={...p,qty:1};
   updateCart();
   const btn=document.querySelector(`.btn-add[onclick="addCart(${id})"]`);
@@ -869,6 +897,10 @@ function addCart(id){
 function removeCart(id){delete cart[id];updateCart();renderGrid();}
 function changeQty(id,d){
   if(!cart[id])return;
+  if(d>0){
+    const p=products.find(x=>x.id==id)||cart[id];
+    if(cart[id].qty>=maxQty(p)){ showToast(`Solo quedan ${maxQty(p)} unidad${maxQty(p)!==1?'es':''} de este producto`); return; }
+  }
   cart[id].qty+=d;
   if(cart[id].qty<=0)delete cart[id];
   updateCart();renderGrid();
@@ -894,8 +926,9 @@ function updateCart(){
         <div class="ci-qty">
           <button class="qty-btn" onclick="changeQty(${i.id},-1)">−</button>
           <span class="qty-num">${i.qty}</span>
-          <button class="qty-btn" onclick="changeQty(${i.id},1)">+</button>
+          <button class="qty-btn${i.qty>=maxQty(i)?' at-max':''}" onclick="changeQty(${i.id},1)">+</button>
         </div>
+        ${i.qty>=maxQty(i)?`<div class="ci-max">Máximo disponible: ${maxQty(i)}</div>`:''}
       </div>
       <button class="ci-rm" onclick="removeCart(${i.id})">✕</button>
     </div>`;
@@ -907,7 +940,7 @@ function syncCartWithProducts(){
   Object.keys(cart).forEach(id=>{
     const p=products.find(x=>x.id==id);
     if(!p||p.stock!==1){ delete cart[id]; return; }
-    cart[id]={...p,qty:cart[id].qty};
+    cart[id]={...p,qty:Math.min(cart[id].qty,maxQty(p))};
   });
 }
 
@@ -1118,6 +1151,7 @@ function openAdmin(){
   populateCatSelects();
   renderAdminList();
   renderAdminCats();
+  detectIngresos();
 }
 function closeAdmin(){document.getElementById('admin-overlay').classList.remove('open');}
 
@@ -1135,7 +1169,9 @@ function adminTab(name){
 function stockStatus(p){
   if(p.sheetStock!==1) return {cls:'stock-off', txt:'Sin stock (planilla)'};
   if(p.hidden) return {cls:'stock-off', txt:'Oculto'};
-  return {cls:'stock-on', txt:'Visible'};
+  const q=isFinite(maxQty(p))?` · ${maxQty(p)} u.`:'';
+  const nuevo=getNuevos().some(x=>x.id===p.id)?' · 🆕':'';
+  return {cls:'stock-on', txt:'Visible'+q+nuevo};
 }
 
 function renderAdminList(filter='',catFilter='',stockFilter=''){
@@ -1243,7 +1279,7 @@ function addProduct(){
   const off=parseInt(document.getElementById('new-off').value)||17;
   const icon=document.getElementById('new-icon').value||'📦';
   const imgname=document.getElementById('new-imgname').value.trim();
-  const np={id,cat,name,desc,icon,lista,oferta,off,cuotas:0,ncuotas:3,sheetStock:1,hidden:false,stock:1,descLarga:'',img2:'',img3:''};
+  const np={id,cat,name,desc,icon,lista,oferta,off,cuotas:0,ncuotas:3,qtyStock:Infinity,sheetStock:1,hidden:false,stock:1,descLarga:'',img2:'',img3:''};
   if(imgname)np.imgname=imgname;
   products.push(np);
   clearAddForm();
@@ -1719,7 +1755,8 @@ function handlePendingRoute(){
     const id=pendingProductId; pendingProductId=null;
     if(products.find(x=>x.id==id && x.stock===1)) openProductDetail(id);
   } else if(pendingCat){
-    if(catLabels[pendingCat]){ currentCat = pendingCat; renderCats(); renderGrid(); }
+    if(pendingCat===NEW_SLUG){ if(getNuevos().length){ currentCat = NEW_KEY; renderCats(); renderGrid(); } }
+    else if(catLabels[pendingCat]){ currentCat = pendingCat; renderCats(); renderGrid(); }
     pendingCat = null;
   }
 }
@@ -1765,17 +1802,13 @@ function parseCuotas(str){
   return {cuotas:0, ncuotas:3};
 }
 
-// Columna K de STOCK: > 0 = disponible. Acepta número o texto.
+// Columna K de STOCK: cantidad disponible (unidades). Devuelve un entero >= 0.
 function parseStock(raw){
   if(raw === undefined || raw === null) return 0;
   const s = String(raw).trim();
   if(s === '') return 0;
-  if(/[0-9]/.test(s)){
-    const n = parseFloat(s.replace(',', '.').replace(/[^0-9.\-]/g,''));
-    return (!isNaN(n) && n > 0) ? 1 : 0;
-  }
-  if(/^(si|sí|true|verdadero|disponible|con stock)$/i.test(s)) return 1;
-  return 0;
+  const n = parseFloat(s.replace(',', '.').replace(/[^0-9.\-]/g,''));
+  return (!isNaN(n) && n > 0) ? Math.floor(n) : 0;
 }
 
 async function loadProductsFromSheets(){
@@ -1800,6 +1833,7 @@ async function loadProductsFromSheets(){
     const codigo = String(cellVal(row, 0)).replace(/[^0-9]/g,'').trim();
     if(codigo) stockMap[codigo] = cellVal(row, 10);
   });
+  stockLoadedOK = stockLoaded;
   if(!stockLoaded) console.log('⚠️ No se pudo leer la hoja STOCK: se muestran todos los productos para no dejar la tienda vacía');
 
   const cleanNum = v => { const n = parseFloat(String(v).replace(/[^0-9.]/g,'')); return isNaN(n) ? 0 : Math.round(n); };
@@ -1819,13 +1853,14 @@ async function loadProductsFromSheets(){
     const descLarga = String(cellVal(row, 30)).trim();
     if(!precioOferta && !precioLista) return;
 
-    const sheetStock = stockLoaded ? parseStock(stockMap[codigo]) : 1;
+    const qtyStock = stockLoaded ? parseStock(stockMap[codigo]) : Infinity;
+    const sheetStock = qtyStock > 0 ? 1 : 0;
     const cat = DEFAULT_CAT[id] || 'varios';
     const p = {
       id, name: nombre, desc: descCorta || nombre, descLarga,
       lista: precioLista || precioOferta, oferta: precioOferta || precioLista,
       off: descuento, cuotas, ncuotas,
-      sheetStock, hidden:false, stock: sheetStock,
+      qtyStock, sheetStock, hidden:false, stock: sheetStock,
       cat, imgUrl: imagenesMap[codigo] || '', img2:'', img3:''
     };
     p.icon = iconFor(p);
@@ -1844,11 +1879,13 @@ async function loadProductsFromSheets(){
 let fbCategoriesCache = {};
 
 async function loadFirebaseData(){
-  const [cats, catCfg, order] = await Promise.all([
+  const [cats, catCfg, order, ingresos] = await Promise.all([
     fbRead('categorias').catch(e=>{console.log('categorias:',e.message);return null;}),
     fbRead('catConfig').catch(e=>{console.log('catConfig:',e.message);return null;}),
-    fbRead('prodOrder').catch(e=>{console.log('prodOrder:',e.message);return null;})
+    fbRead('prodOrder').catch(e=>{console.log('prodOrder:',e.message);return null;}),
+    fbRead('ingresos').catch(e=>{console.log('ingresos:',e.message);return null;})
   ]);
+  ingresosData = (ingresos && typeof ingresos==='object') ? ingresos : {};
   fbCategoriesCache = cats || {};
   if(catCfg && Array.isArray(catCfg.catOrder) && catCfg.catOrder.length){
     catOrder.length=0;
@@ -1878,6 +1915,57 @@ function saveProductToFirebase(productId){
   fbWrite(`categorias/${productId}`,'PUT',{cat: p.cat, descLarga: p.descLarga||'', hidden: !!p.hidden})
     .then(()=>showToast('✅ Guardado'))
     .catch(e=>{console.log('Error:', e.message);});
+}
+
+// ============================================================
+// DETECCIÓN DE NUEVOS INGRESOS (corre al abrir el panel, con sesión)
+// Compara el stock actual con la última foto guardada en Firebase (stockSnapshot).
+// Producto nuevo o que pasó de 0 a más => se marca en "ingresos" con la fecha.
+// ============================================================
+let dataReady = false;
+async function detectIngresos(){
+  if(ingresosChecked || !dataReady || !fbAuth) return;
+  if(!stockLoadedOK){ console.log('Nuevos ingresos: la hoja STOCK no cargó, no se compara'); return; }
+  ingresosChecked = true;
+  let snapshot;
+  try{
+    snapshot = await fbAuthed('stockSnapshot','GET');
+  }catch(e){
+    ingresosChecked = false;
+    console.log('Nuevos ingresos: no se pudo leer stockSnapshot', e.message);
+    showToast('⚠️ Para "Nuevos ingresos" actualizá las reglas de Firebase');
+    return;
+  }
+  const now = Date.now();
+  const limit = now - NEW_DAYS*24*60*60*1000;
+  const current = {};
+  products.forEach(p=>{ if(isFinite(maxQty(p))) current[p.id] = maxQty(p); });
+  const patch = {};
+  let marcados = 0;
+  if(snapshot && typeof snapshot==='object'){
+    products.forEach(p=>{
+      const q = current[p.id];
+      if(!(q>0)) return;
+      const prev = snapshot[p.id];
+      if(prev === undefined || prev === null || Number(prev) <= 0){
+        patch[p.id] = now; marcados++;
+      }
+    });
+  }
+  // limpiar ingresos vencidos
+  Object.keys(ingresosData).forEach(id=>{ if(ingresosData[id] < limit && !(id in patch)) patch[id] = null; });
+  try{
+    if(Object.keys(patch).length) await fbWrite('ingresos','PATCH',patch);
+    await fbWrite('stockSnapshot','PUT',current);
+    Object.keys(patch).forEach(id=>{ if(patch[id]===null) delete ingresosData[id]; else ingresosData[id]=patch[id]; });
+    if(!snapshot) showToast('✅ Nuevos ingresos activado: se toma el stock actual como punto de partida');
+    else if(marcados) showToast(`🆕 ${marcados} producto${marcados!==1?'s':''} en Nuevos ingresos`);
+    renderCats(); renderGrid();
+    filterAdminList(document.getElementById('admin-search-prod').value);
+  }catch(e){
+    ingresosChecked = false;
+    console.log('Nuevos ingresos: error al guardar', e.message);
+  }
 }
 
 // ============================================================
@@ -1914,9 +2002,11 @@ async function initData(){
     console.error('Error en la carga:', e);
     sheetsFailed = !products.length;
   }
+  dataReady = !sheetsFailed;
   renderAll();
   try{ handlePendingRoute(); }catch(e){ console.error(e); }
   hideLoader();
+  if(fbAuth) detectIngresos();
 }
 
 function retryLoad(){ initData(); }
