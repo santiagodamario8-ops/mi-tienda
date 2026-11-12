@@ -100,13 +100,37 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .btn-add{flex:1;padding:8px 6px;border:1.5px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-size:12px;font-weight:500;color:var(--text2);transition:all .15s}
 .btn-add:hover{background:#e8f0fc;border-color:var(--blue3);color:var(--blue3)}
 .btn-add.added{background:#e8f0fc;border-color:var(--blue3);color:var(--blue3)}
-.btn-wa{padding:8px 10px;border:1.5px solid var(--green);border-radius:8px;background:#fff;cursor:pointer;font-size:14px;color:var(--green);transition:all .15s;text-decoration:none;display:flex;align-items:center;justify-content:center}
-.btn-wa:hover{background:var(--green);color:#fff}
+.btn-buy{padding:8px 10px;border:1.5px solid var(--blue3);border-radius:8px;background:#fff;cursor:pointer;font-size:14px;color:var(--blue3);transition:all .15s;display:flex;align-items:center;justify-content:center}
+.btn-buy:hover{background:var(--blue3);color:#fff}
 
 /* CHECKOUT MODAL */
 .checkout-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:250;align-items:center;justify-content:center;padding:20px}
 .checkout-overlay.open{display:flex}
-.checkout-box{background:#fff;border-radius:16px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden}
+.checkout-box{background:#fff;border-radius:16px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden;max-height:92vh;overflow-y:auto}
+/* MEDIOS DE PAGO */
+.pay-options{display:flex;flex-direction:column;gap:10px}
+.pay-opt{display:block;width:100%;text-align:left;padding:14px 16px;border:1.5px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;transition:border-color .15s,background .15s;font-family:inherit}
+.pay-opt:hover{border-color:var(--blue4)}
+.pay-opt.selected{border-color:var(--blue3);background:#f0f6ff;box-shadow:0 0 0 1px var(--blue3) inset}
+.pay-opt-title{font-size:13px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.pay-opt-old{font-size:12px;color:#aab;text-decoration:line-through}
+.pay-opt-price{font-size:20px;font-weight:700;color:var(--blue2);line-height:1.2}
+.pay-opt-sub{font-size:13px;color:var(--text2);margin-top:2px}
+.pay-opt-save{font-size:12px;color:#16a34a;font-weight:600;margin-top:2px}
+.pay-sep{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin:6px 2px 0}
+.pay-info{margin-top:14px;padding:14px;border-radius:10px;background:#f8faff;border:1px solid var(--border);font-size:13px;color:var(--text2);line-height:1.5}
+.pay-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #e8eef8}
+.pay-row:last-of-type{border-bottom:none}
+.pay-row-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px}
+.pay-row-val{font-size:14px;font-weight:600;color:var(--text);word-break:break-all}
+.pay-copy{flex-shrink:0;padding:6px 10px;border:1.5px solid var(--border);border-radius:6px;background:#fff;font-size:12px;font-weight:600;color:var(--blue3);cursor:pointer}
+.pay-copy:hover{border-color:var(--blue3)}
+.pay-mp{display:block;text-align:center;margin-top:10px;padding:10px;border-radius:8px;background:#009ee3;color:#fff;text-decoration:none;font-weight:700;font-size:14px}
+.pay-mp:hover{background:#0087c2}
+.btn-checkout-send:disabled{opacity:.45;cursor:not-allowed}
+.ship-note{font-size:12px;margin-top:6px;font-weight:600}
+.ship-note.ok{color:#16a34a}
+.ship-note.info{color:#b45309}
 .checkout-header{background:var(--blue1);padding:18px 22px;display:flex;align-items:center;justify-content:space-between}
 .checkout-header h3{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#fff}
 .checkout-close{background:none;border:none;font-size:22px;cursor:pointer;color:rgba(255,255,255,.7);line-height:1}
@@ -175,6 +199,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .cart-total-amt{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:var(--blue2)}
 .btn-checkout{display:block;width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;transition:background .15s;font-family:'Rajdhani',sans-serif;letter-spacing:.5px}
 .btn-checkout:hover{background:#1da855}
+.btn-keep{display:block;width:100%;margin-top:10px;padding:12px;background:#fff;color:var(--blue2);border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px;font-family:'Rajdhani',sans-serif}
+.btn-keep:hover{border-color:var(--blue3);color:var(--blue3)}
 
 /* ADMIN PANEL */
 .admin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300}
@@ -416,7 +442,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <span class="cart-total-lbl">Total</span>
       <span class="cart-total-amt" id="cart-total">$0</span>
     </div>
-    <button class="btn-checkout" id="btn-checkout" onclick="openCheckoutModal()">💬 Comprar por WhatsApp</button>
+    <button class="btn-checkout" id="btn-checkout" onclick="openCheckoutModal()">FINALIZAR COMPRA</button>
+    <button class="btn-keep" onclick="closeCart()">SEGUIR COMPRANDO</button>
   </div>
 </div>
 
@@ -804,7 +831,7 @@ function cardHTML(p){
         <button class="btn-add${inCart?' added':''}" onclick="addCart(${p.id})">
           ${inCart?'✓ En carrito':'+ Agregar'}
         </button>
-        <button class="btn-wa" onclick="quickBuyFromCard(${p.id})" title="Comprar por WhatsApp">💬</button>
+        <button class="btn-buy" onclick="buyNow(${p.id})" title="Comprar">🛒</button>
       </div>
     </div>
   </div>`;
@@ -1018,22 +1045,19 @@ function shareProduct(){
   }
 }
 
-function quickBuyFromCard(id){
+// Botón comprar: agrega (si no está) y abre el carrito armado
+function buyNow(id){
   const p = products.find(x=>x.id===id);
-  if(!p) return;
-  if(!cart[p.id]){ cart[p.id]={...p,qty:1}; }
-  updateCart();
-  openCheckoutModal();
+  if(!p || p.stock!==1) return;
+  if(!cart[p.id]) addCart(p.id);
+  if(cart[p.id]) openCart();
 }
 
-function openWhatsAppFromDetail(){
-  if(currentDetailProduct){
-    const p = currentDetailProduct;
-    if(!cart[p.id]){ cart[p.id]={...p,qty:1}; }
-    updateCart();
-    closeProductDetail();
-    openCheckoutModal();
-  }
+function buyFromDetail(){
+  if(!currentDetailProduct) return;
+  const id = currentDetailProduct.id;
+  closeProductDetail();
+  buyNow(id);
 }
 
 function openCart(){document.getElementById('cart-panel').classList.add('open');document.getElementById('cart-overlay').classList.add('open');}
@@ -1457,6 +1481,40 @@ let _checkoutDiscountPct = 0;
 let _checkoutHasCode = false;
 let _checkoutPromo = null;
 let _codeCheckSeq = 0;
+let _payMethod = null;
+
+// Datos de cobro
+const PAY_ALIAS = 'nexar.store';
+const PAY_CVU = '0000003100077794467854';
+const PAY_TITULAR = 'Santiago German Damario';
+const PAY_MP_LINK = 'https://mpago.la/2T1yUJ4';
+const ENVIO_GRATIS_MIN = 15000; // envío gratis en Venado Tuerto desde este monto
+const PAY_NAMES = {tarjeta:'Tarjeta de crédito o débito (link Getnet)', transferencia:'Transferencia / Mercado Pago', efectivo:'Efectivo al recibir'};
+
+function itemInPromo(i, promo){
+  if(!promo || !promo.scope || promo.scope==='all') return true;
+  if(promo.scope==='cat'){ const c=Array.isArray(i.cat)?i.cat:[i.cat]; return c.includes(promo.cat); }
+  if(promo.scope==='prod') return String(i.id)===String(promo.prod);
+  return true;
+}
+// Cuota (en 3) de un item: los de 6 cuotas se pasan a 3 multiplicando x2
+function cuota3(i){
+  if(i.cuotas) return i.ncuotas===6 ? i.cuotas*2 : i.cuotas;
+  return (i.lista||i.oferta)/3;
+}
+// Totales del carrito con el descuento del código aplicado
+function computeTotals(){
+  const pct = _checkoutDiscountPct||0;
+  let cash=0, cashDisc=0, cuota=0, cuotaDisc=0;
+  Object.values(cart).forEach(i=>{
+    const c = i.oferta*i.qty;
+    const q = cuota3(i)*i.qty;
+    cash += c; cuota += q;
+    if(pct && itemInPromo(i,_checkoutPromo)){ cashDisc += c*pct/100; cuotaDisc += q*pct/100; }
+  });
+  const cuotaFinal = cuota - cuotaDisc;
+  return {cash, cashDisc, cashFinal: cash-cashDisc, cuota, cuotaFinal, cardTotal: cuotaFinal*3};
+}
 
 function openCheckoutModal(){
   const items = Object.values(cart);
@@ -1464,6 +1522,7 @@ function openCheckoutModal(){
   _checkoutDiscountPct = 0;
   _checkoutHasCode = false;
   _checkoutPromo = null;
+  _payMethod = null;
   document.getElementById('checkout-code-input').value = '';
   document.getElementById('checkout-code-msg').textContent = '';
   document.getElementById('checkout-code-msg').className = 'checkout-code-msg';
@@ -1472,6 +1531,11 @@ function openCheckoutModal(){
   document.getElementById('checkout-nombre').value = '';
   document.getElementById('checkout-direccion').value = '';
   document.getElementById('checkout-localidad').value = '';
+  document.getElementById('pay-alias').textContent = PAY_ALIAS;
+  document.getElementById('pay-cvu').textContent = PAY_CVU;
+  document.getElementById('pay-titular').textContent = PAY_TITULAR;
+  document.getElementById('pay-mp-link').href = PAY_MP_LINK;
+  closeCart();
   checkoutGoStep(1);
   document.getElementById('checkout-overlay').classList.add('open');
 }
@@ -1483,14 +1547,16 @@ function closeCheckoutModal(){
 function checkoutGoStep(n){
   document.querySelectorAll('.checkout-step').forEach(s=>s.classList.remove('active'));
   document.getElementById('checkout-step-'+n).classList.add('active');
+  if(n==='pay') renderPayOptions();
   if(n===3) updateCheckoutSummary();
+  const box=document.querySelector('.checkout-box'); if(box) box.scrollTop=0;
 }
 
 function checkoutSkipCode(){
   _checkoutDiscountPct = 0;
   _checkoutHasCode = false;
   _checkoutPromo = null;
-  checkoutGoStep(3);
+  checkoutGoStep('pay');
 }
 
 function checkoutBackToCode(){
@@ -1498,60 +1564,110 @@ function checkoutBackToCode(){
   else checkoutGoStep(1);
 }
 
+function renderPayOptions(){
+  const t = computeTotals();
+  const ahorro = t.cardTotal - t.cashFinal;
+  document.getElementById('pay-card-total').textContent = fmt(t.cardTotal);
+  document.getElementById('pay-card-cuotas').textContent = `hasta 3 cuotas sin interés de ${fmt(t.cuotaFinal)}`;
+  ['tr','ef'].forEach(k=>{
+    document.getElementById(`pay-${k}-old`).textContent = ahorro>0 ? fmt(t.cardTotal) : '';
+    document.getElementById(`pay-${k}-total`).textContent = fmt(t.cashFinal);
+    document.getElementById(`pay-${k}-save`).textContent = ahorro>0 ? `Ahorrás ${fmt(ahorro)}` : '';
+  });
+  ['tarjeta','transferencia','efectivo'].forEach(m=>{
+    document.getElementById('pay-opt-'+m).classList.toggle('selected', _payMethod===m);
+    document.getElementById('pay-info-'+m).style.display = _payMethod===m ? 'block' : 'none';
+  });
+  document.getElementById('pay-next').disabled = !_payMethod;
+}
+
+function selectPay(m){
+  _payMethod = m;
+  renderPayOptions();
+}
+
+function copyPayData(what){
+  const val = what==='alias' ? PAY_ALIAS : PAY_CVU;
+  const label = what==='alias' ? 'Alias' : 'CVU';
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(val).then(()=>showToast(`${label} copiado`)).catch(()=>showToast(`${label}: ${val}`));
+  } else {
+    showToast(`${label}: ${val}`);
+  }
+}
+
+function isVenadoTuerto(s){
+  return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').includes('venado tuerto');
+}
+
+function methodTotal(t){ return _payMethod==='tarjeta' ? t.cardTotal : t.cashFinal; }
+
+function shippingInfo(){
+  const loc = document.getElementById('checkout-localidad').value.trim();
+  if(!loc) return null;
+  const total = methodTotal(computeTotals());
+  if(isVenadoTuerto(loc)){
+    if(total >= ENVIO_GRATIS_MIN) return {cls:'ok', txt:'Envío gratis en Venado Tuerto'};
+    return {cls:'info', txt:`Envío a Venado Tuerto: gratis desde ${fmt(ENVIO_GRATIS_MIN)}. El costo te lo confirmamos por WhatsApp`};
+  }
+  return {cls:'info', txt:'Envío fuera de Venado Tuerto: te pasamos la cotización por WhatsApp'};
+}
+
 function updateCheckoutSummary(){
-  const total = _checkoutPromo ? calcDiscountedTotal(_checkoutPromo) : (window._cartTotal||0);
-  const descuento = total * _checkoutDiscountPct / 100;
-  const totalFinal = (window._cartTotal||0) - descuento;
-  const itemsCart = Object.values(cart);
-  const totalCuotas3 = itemsCart.reduce((s,i)=>{
-    const cuotaUnitaria3 = i.ncuotas===6 ? i.cuotas*2 : i.cuotas;
-    return s + cuotaUnitaria3*i.qty;
-  },0);
-  const descuentoCuotas = totalCuotas3 * _checkoutDiscountPct / 100;
-  const totalCuotas3Final = totalCuotas3 - descuentoCuotas;
-  document.getElementById('checkout-summary-total').textContent = fmt(totalFinal)+' · Efectivo / Transferencia';
+  const t = computeTotals();
+  const totalEl = document.getElementById('checkout-summary-total');
+  const subEl = document.getElementById('checkout-summary-cuotas');
   const discDiv = document.getElementById('checkout-summary-discount');
+  if(_payMethod==='tarjeta'){
+    totalEl.textContent = `${fmt(t.cardTotal)} · Tarjeta`;
+    subEl.textContent = `hasta 3 cuotas sin interés de ${fmt(t.cuotaFinal)} · te enviamos link de pago Getnet`;
+  } else {
+    totalEl.textContent = `${fmt(t.cashFinal)} · ${_payMethod==='efectivo'?'Efectivo al recibir':'Transferencia'}`;
+    subEl.textContent = t.cardTotal>t.cashFinal ? `Con tarjeta: ${fmt(t.cardTotal)}` : '';
+  }
   if(_checkoutDiscountPct>0){
-    discDiv.textContent=`Descuento ${_checkoutDiscountPct}% aplicado (ahorrás ${fmt(descuento)})`;
-    discDiv.style.display='block';
-  } else { discDiv.style.display='none'; }
-  document.getElementById('checkout-summary-cuotas').textContent=`o hasta 3 cuotas de ${fmt(totalCuotas3Final)}`;
+    discDiv.textContent = `Código ${_checkoutDiscountPct}% aplicado`;
+    discDiv.style.display = 'block';
+  } else { discDiv.style.display = 'none'; }
+  const note = document.getElementById('ship-note');
+  const s = shippingInfo();
+  note.textContent = s ? s.txt : '';
+  note.className = 'ship-note' + (s ? ' '+s.cls : '');
 }
 
 function sendToWhatsApp(){
   const nombre = document.getElementById('checkout-nombre').value.trim();
   const direccion = document.getElementById('checkout-direccion').value.trim();
   const localidad = document.getElementById('checkout-localidad').value.trim();
+  if(!_payMethod){ checkoutGoStep('pay'); showToast('Elegí un medio de pago'); return; }
   if(!nombre || !direccion || !localidad){
     showToast('Completá todos los datos para continuar');
     return;
   }
-  const total = _checkoutPromo ? calcDiscountedTotal(_checkoutPromo) : (window._cartTotal||0);
-  const descuento = total * _checkoutDiscountPct / 100;
-  const totalFinal = (window._cartTotal||0) - descuento;
-  const msg = window._cartMsg || '';
-  let text = `Hola! Quisiera realizar el siguiente pedido:\n\n${msg}\n\n`;
+  const t = computeTotals();
+  const esTarjeta = _payMethod==='tarjeta';
+  const items = Object.values(cart);
+  const lineas = items.map(i=>{
+    const precio = esTarjeta ? cuota3(i)*3*i.qty : i.oferta*i.qty;
+    return `- ${i.name} (x${i.qty}) - ${fmt(precio)}`;
+  }).join('\n');
+  let text = `Hola! Quisiera realizar el siguiente pedido:\n\n${lineas}\n\n`;
   if(_checkoutDiscountPct > 0){
-    text += `💰 Subtotal: ${fmt(window._cartTotal||0)}\n`;
     const codigoUsado = document.getElementById('checkout-code-input').value.toUpperCase().trim();
-    text += `🎟️ Código: ${codigoUsado} (${_checkoutDiscountPct}% desc.): -${fmt(descuento)}\n`;
-    text += `✅ TOTAL CON DESCUENTO: ${fmt(totalFinal)} (Efectivo / Transferencia)\n`;
-  } else {
-    text += `✅ TOTAL: ${fmt(totalFinal)} (Efectivo / Transferencia)\n`;
+    text += `🎟️ Código: ${codigoUsado} (${_checkoutDiscountPct}% desc.)\n`;
   }
-  // Total en 3 cuotas unificado (productos de 6 cuotas se pasan a 3 multiplicando x2)
-  const itemsCart = Object.values(cart);
-  const totalCuotas3 = itemsCart.reduce((s, i) => {
-    const cuotaUnitaria3 = i.ncuotas === 6 ? i.cuotas * 2 : i.cuotas;
-    return s + cuotaUnitaria3 * i.qty;
-  }, 0);
-  const descuentoCuotas = totalCuotas3 * _checkoutDiscountPct / 100;
-  const totalCuotas3Final = totalCuotas3 - descuentoCuotas;
-  if(_checkoutDiscountPct > 0){
-    text += `💳 3 cuotas de ${fmt(totalCuotas3Final)} (con ${_checkoutDiscountPct}% desc. aplicado sobre precio de lista)\n\n`;
+  text += `💳 Medio de pago: ${PAY_NAMES[_payMethod]}\n`;
+  if(esTarjeta){
+    text += `✅ TOTAL CON TARJETA: ${fmt(t.cardTotal)} (hasta 3 cuotas sin interés de ${fmt(t.cuotaFinal)})\n`;
+    text += `📲 Espero el link de pago\n\n`;
+  } else if(_payMethod==='transferencia'){
+    text += `✅ TOTAL POR TRANSFERENCIA: ${fmt(t.cashFinal)}\n`;
+    text += `🧾 Te envío el comprobante por acá\n\n`;
   } else {
-    text += `💳 o 3 cuotas de ${fmt(totalCuotas3)}\n\n`;
+    text += `✅ TOTAL EN EFECTIVO: ${fmt(t.cashFinal)} (pago al recibir)\n\n`;
   }
+  const s = shippingInfo();
+  if(s) text += `🚚 ${s.txt}\n\n`;
   text += `📦 Datos de entrega:\n`;
   text += `👤 Nombre: ${nombre}\n`;
   text += `📍 Dirección: ${direccion}\n`;
@@ -2049,8 +2165,49 @@ setTimeout(()=>{
             <div class="dp-saving" id="dp-saving"></div>
           </div>
         </div>
-        <button class="btn-checkout-send" id="checkout-code-next" onclick="checkoutGoStep(3)" style="margin-top:18px;display:none">Continuar</button>
+        <button class="btn-checkout-send" id="checkout-code-next" onclick="checkoutGoStep('pay')" style="margin-top:18px;display:none">Continuar</button>
         <button class="checkout-back" onclick="checkoutGoStep(1)">← Volver</button>
+      </div>
+
+      <div class="checkout-step" id="checkout-step-pay">
+        <div class="checkout-question">¿Cómo querés pagar?</div>
+        <div class="pay-options">
+          <button type="button" class="pay-opt" id="pay-opt-tarjeta" onclick="selectPay('tarjeta')">
+            <div class="pay-opt-title">Tarjeta de crédito o débito</div>
+            <div class="pay-opt-price" id="pay-card-total"></div>
+            <div class="pay-opt-sub" id="pay-card-cuotas"></div>
+          </button>
+          <div class="pay-sep">Pagando en efectivo o transferencia</div>
+          <button type="button" class="pay-opt" id="pay-opt-transferencia" onclick="selectPay('transferencia')">
+            <div class="pay-opt-title">Transferencia / Mercado Pago</div>
+            <div class="pay-opt-old" id="pay-tr-old"></div>
+            <div class="pay-opt-price" id="pay-tr-total"></div>
+            <div class="pay-opt-save" id="pay-tr-save"></div>
+          </button>
+          <button type="button" class="pay-opt" id="pay-opt-efectivo" onclick="selectPay('efectivo')">
+            <div class="pay-opt-title">Efectivo al recibir</div>
+            <div class="pay-opt-old" id="pay-ef-old"></div>
+            <div class="pay-opt-price" id="pay-ef-total"></div>
+            <div class="pay-opt-save" id="pay-ef-save"></div>
+          </button>
+        </div>
+
+        <div class="pay-info" id="pay-info-tarjeta" style="display:none">
+          Al enviar tu pedido te mandamos por WhatsApp un <strong>link de pago seguro de Getnet</strong> para pagar con tu tarjeta.
+        </div>
+        <div class="pay-info" id="pay-info-transferencia" style="display:none">
+          <div class="pay-row"><div><div class="pay-row-lbl">Alias</div><div class="pay-row-val" id="pay-alias"></div></div><button type="button" class="pay-copy" onclick="copyPayData('alias')">Copiar</button></div>
+          <div class="pay-row"><div><div class="pay-row-lbl">CVU</div><div class="pay-row-val" id="pay-cvu"></div></div><button type="button" class="pay-copy" onclick="copyPayData('cvu')">Copiar</button></div>
+          <div class="pay-row"><div><div class="pay-row-lbl">Titular</div><div class="pay-row-val" id="pay-titular"></div></div></div>
+          <a class="pay-mp" id="pay-mp-link" href="#" target="_blank" rel="noopener">Transferir con Mercado Pago</a>
+          <div style="margin-top:10px">Cuando transfieras, enviá el comprobante por WhatsApp.</div>
+        </div>
+        <div class="pay-info" id="pay-info-efectivo" style="display:none">
+          Pagás en efectivo cuando recibís el pedido.
+        </div>
+
+        <button class="btn-checkout-send" id="pay-next" onclick="checkoutGoStep(3)" style="margin-top:16px" disabled>Continuar</button>
+        <button class="checkout-back" onclick="checkoutBackToCode()">← Volver</button>
       </div>
 
       <div class="checkout-step" id="checkout-step-3">
@@ -2065,7 +2222,8 @@ setTimeout(()=>{
         </div>
         <div class="checkout-form-group">
           <label>Localidad *</label>
-          <input type="text" id="checkout-localidad" placeholder="Ej: Venado Tuerto">
+          <input type="text" id="checkout-localidad" placeholder="Ej: Venado Tuerto" oninput="updateCheckoutSummary()">
+          <div class="ship-note" id="ship-note"></div>
         </div>
         <div class="checkout-summary" id="checkout-summary">
           <div class="checkout-summary-title">Resumen de tu pedido</div>
@@ -2074,7 +2232,7 @@ setTimeout(()=>{
           <div class="checkout-summary-cuotas" id="checkout-summary-cuotas"></div>
         </div>
         <button class="btn-checkout-send" onclick="sendToWhatsApp()">💬 Enviar pedido por WhatsApp</button>
-        <button class="checkout-back" onclick="checkoutBackToCode()">← Volver</button>
+        <button class="checkout-back" onclick="checkoutGoStep('pay')">← Volver</button>
       </div>
 
     </div>
@@ -2108,7 +2266,7 @@ setTimeout(()=>{
       <div class="product-detail-categories" id="product-detail-categories"></div>
       <div class="product-detail-buttons">
         <button class="product-detail-add" onclick="addCartFromDetail()">+ Agregar al carrito</button>
-        <button class="product-detail-whatsapp" onclick="openWhatsAppFromDetail()">💬 WhatsApp</button>
+        <button class="product-detail-whatsapp" onclick="buyFromDetail()">🛒 Comprar</button>
         <button class="product-detail-share" onclick="shareProduct()" title="Compartir">🔗</button>
       </div>
     </div>
