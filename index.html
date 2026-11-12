@@ -261,6 +261,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .api-info{flex:1;min-width:0}
 .api-name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .api-meta{font-size:11px;color:var(--text3)}
+.auto-badge{display:inline-block;background:#fef3c7;color:#92400e;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;margin-right:4px;vertical-align:1px}
 .api-price{font-size:13px;font-weight:700;color:var(--blue2);white-space:nowrap}
 .api-actions{display:flex;gap:6px;flex-shrink:0}
 .api-stock{display:flex;align-items:center;gap:6px;font-size:12px}
@@ -760,6 +761,44 @@ const DEFAULT_CAT = {};
   ['nuevosingresos',[1148,3137,3157,3158,3159,3164,3165,3177,3178,3179,...rng(3188,3192),3195,3199]]
 ].forEach(([cat,ids])=>ids.forEach(id=>DEFAULT_CAT[id]=cat));
 
+// ============================================================
+// CATEGORIZACIÓN AUTOMÁTICA POR PALABRAS CLAVE
+// Se usa solo en productos sin categoría elegida a mano.
+// Puede asignar varias categorías. "MÁS VENDIDOS" nunca se asigna sola.
+// ============================================================
+const AUTO_RULES = [
+  ['auriculares', ['AURICULAR','AURICULARES','AURICULURES','AIRPODS','INPODS','BUDS','HEADPHONES?','HEADSET']],
+  ['cables', ['CABLE','CABLES']],
+  ['cargadores', ['CARGADOR','CARGADORES','CARGARDOR','CHARGER','CARGADOR INALAMBRICO']],
+  ['powerbanks', ['POWER ?BANK','BATTERY PACK','BATERIA EXTERNA','ALARGUE','ZAPATILLA ELECTRICA']],
+  ['tecladosmouses', ['TECLADO','TECLADOS','MOUSE','MOUSE PAD','KIT GAMER']],
+  ['webcams', ['WEBCAM','CAMARA','CAMARAS','DRONE']],
+  ['smartwatches', ['SMART ?WATCH','WATCH','RELOJ','BAND \\d+','SMARTBAND']],
+  ['celularestablets', ['CELULAR','CELULARES','TABLET','PAD SE','FUNDAS?','SAMSUNG GALAXY [AMSZ]\\d+','REDMI NOTE','REDMI A\\d+','REDMI \\d+C?','POCO [CFMX]\\d+','MOTO [EG]\\d+','MOTO EDGE','THINKPHONE','IPHONE \\d+']],
+  ['parlantes', ['PARLANTE','PARLANTES','BARRA DE SONIDO','SPEAKER']],
+  ['iluminacion', ['LAMPARA','LAMPARAS','LAMP','LUZ','LUCES','ARO DE LUZ','ESQUINERO','VELADOR','NEON','LINTERNA','TIRA LED','LEDS','FOCO']],
+  ['hogar', ['PAVA','LICUADORA','MIXER','BATIDORA','TOSTADORA','VENTILADOR','CALOVENTOR','CONVECTOR','ESTUFA','ANAFE','PANQUEQUERA','EXPRIMIDOR','BALANZA','HUMIDIFICADOR','HUMIDIFACADOR','DISPENSER','SOPORTE TV','TV BOX','TENDER','SOFA','PUF','SACACORCHOS','AFILADOR','PROYECTOR','EXTENSOR WIFI','ROUTER','CONTADORA','MATA MOSCAS','CAFETERA','FREIDORA','OLLA','SARTEN','PLANCHA','MATE','YERBERA','DESPOLVILLADOR','BOMBILLA','TERMO','PARASOL','CANDADO']],
+  ['entretenimiento', ['JOYSTICK','PELOTA','MICROFONO','MONOPATIN','SCOOTER','JUEGO','CONSOLA','GORRITO','FIBRONES','FIGURITAS','AMETRALLADORA','INFLA GLOBOS','STRASS','DRONE','KARAOKE']],
+  ['herramientas', ['DESTORNILLADOR','KIT DE TUBOS','TALADRO','LLAVE','LLAVES','HERRAMIENTA','HERRAMIENTAS','INFLADOR','COMPRESOR','CINTA METRICA','PINZA','MARTILLO','SOLDADOR']],
+  ['cuidadopersonal', ['SECADOR','PLANCHITA','BUCLERA','RIZADOR','CORTAPELOS','CORTADORA','AFEITADORA','DEPILADORA','ESPEJO','MASAJEADOR','GUANTES']]
+].map(([cat,words])=>[cat, new RegExp('(^|[^A-Z0-9])('+words.join('|')+')(?=$|[^A-Z0-9])')]);
+
+function normTxt(s){
+  return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();
+}
+function matchCats(txt){
+  const t=normTxt(txt);
+  return AUTO_RULES.filter(([cat,re])=>catLabels[cat] && re.test(t)).map(([cat])=>cat);
+}
+// Primero mira el nombre; si no coincide nada, prueba con la descripción corta
+function autoCategorize(p){
+  let cats=matchCats(p.name);
+  if(!cats.length) cats=matchCats(p.desc);
+  return cats;
+}
+function catList(c){ return Array.isArray(c)?c:(c?[c]:[]); }
+function onlyVarios(c){ const l=catList(c); return l.length===1 && l[0]==='varios'; }
+
 // Arranca vacío: los productos SOLO vienen de Google Sheets (nunca se muestran precios viejos)
 let products = [];
 
@@ -1202,7 +1241,8 @@ function renderAdminList(filter='',catFilter='',stockFilter=''){
   const list=document.getElementById('admin-prod-list');
   let items=[...products];
   if(filter)items=items.filter(p=>p.name.toLowerCase().includes(filter.toLowerCase())||String(p.id).includes(filter));
-  if(catFilter)items=items.filter(p=>Array.isArray(p.cat)?p.cat.includes(catFilter):p.cat===catFilter);
+  if(catFilter==='__auto')items=items.filter(p=>p.autoCat);
+  else if(catFilter)items=items.filter(p=>Array.isArray(p.cat)?p.cat.includes(catFilter):p.cat===catFilter);
   if(stockFilter==='on')items=items.filter(p=>p.stock===1);
   if(stockFilter==='off')items=items.filter(p=>p.stock!==1);
   document.getElementById('admin-prod-count').textContent=`${items.length} productos`;
@@ -1216,7 +1256,7 @@ function renderAdminList(filter='',catFilter='',stockFilter=''){
       <img class="api-thumb" src="${src}" onerror="imgOnerror(this,'${esc(p.imgname||p.id)}','${esc(p.imgUrl||'')}')"><div style="display:none"></div>
       <div class="api-info">
         <div class="api-name">#${p.id} ${esc(p.name)}</div>
-        <div class="api-meta">${(Array.isArray(p.cat)?p.cat.map(c=>catLabels[c]||c).join(', '):(catLabels[p.cat]||p.cat))} · ${esc(p.desc)}</div>
+        <div class="api-meta">${p.autoCat?'<span class="auto-badge" title="Categoría asignada automáticamente">AUTO</span>':''}${(Array.isArray(p.cat)?p.cat.map(c=>catLabels[c]||c).join(', '):(catLabels[p.cat]||p.cat))} · ${esc(p.desc)}</div>
       </div>
       <div class="api-price">${fmt(p.oferta)}</div>
       <div class="api-stock">
@@ -1277,6 +1317,7 @@ function saveQE(){
   p.desc=document.getElementById('qe-desc').value;
   const checkedCats=[...document.querySelectorAll('#qe-cat input[type=checkbox]:checked')].map(cb=>cb.value);
   p.cat=checkedCats.length===1?checkedCats[0]:(checkedCats.length>1?checkedCats:p.cat);
+  p.manual=true; p.autoCat=false; // elegido a mano: la detección no lo toca más
   p.lista=parseFloat(document.getElementById('qe-lista').value)||p.lista;
   p.oferta=parseFloat(document.getElementById('qe-oferta').value)||p.oferta;
   p.off=parseInt(document.getElementById('qe-off').value)||p.off;
@@ -1408,7 +1449,7 @@ function populateCatSelects(){
   const filterSel=document.getElementById('admin-cat-filter');
   const orderSel=document.getElementById('prod-order-cat-select');
   if(newCatSel)newCatSel.innerHTML=opts;
-  if(filterSel){const v=filterSel.value;filterSel.innerHTML=`<option value="">Todas las categorías</option>`+opts;filterSel.value=v;}
+  if(filterSel){const v=filterSel.value;filterSel.innerHTML=`<option value="">Todas las categorías</option><option value="__auto">⚙ Asignadas automáticamente</option>`+opts;filterSel.value=v;}
   if(orderSel){const v=orderSel.value;orderSel.innerHTML=`<option value="">— Seleccioná una categoría —</option>`+opts;orderSel.value=v;}
 }
 
@@ -2011,11 +2052,23 @@ async function loadFirebaseData(){
 function applyFirebaseToProducts(){
   products.forEach(p=>{
     const fb = fbCategoriesCache[p.id];
+    p.manual = false; p.autoCat = false;
     if(fb){
-      if(fb.cat) p.cat = fb.cat;
       if(fb.descLarga) p.descLarga = fb.descLarga;
       p.hidden = fb.hidden === true; // ocultar manual desde el panel
       // fb.stock (dato viejo) se ignora: el stock manda la planilla
+    }
+    // Categorías: lo elegido a mano manda siempre
+    if(fb && fb.manual === true && fb.cat){
+      p.cat = fb.cat; p.manual = true;
+    } else if(fb && fb.cat && fb.auto !== true && !onlyVarios(fb.cat)){
+      p.cat = fb.cat; // asignada antes desde el panel
+    } else if(DEFAULT_CAT[p.id] && !(fb && fb.auto === true)){
+      p.cat = DEFAULT_CAT[p.id];
+    } else {
+      const auto = autoCategorize(p);
+      if(auto.length){ p.cat = auto.length===1 ? auto[0] : auto; p.autoCat = true; }
+      else p.cat = 'varios';
     }
     p.icon = iconFor(p);
     recomputeStock(p);
@@ -2025,7 +2078,9 @@ function applyFirebaseToProducts(){
 function saveProductToFirebase(productId){
   const p = products.find(x=>x.id==productId);
   if(!p) return;
-  fbWrite(`categorias/${productId}`,'PUT',{cat: p.cat, descLarga: p.descLarga||'', hidden: !!p.hidden})
+  const data = {cat: p.cat, descLarga: p.descLarga||'', hidden: !!p.hidden, manual: !!p.manual};
+  if(p.autoCat && !p.manual) data.auto = true; // sigue siendo automática
+  fbWrite(`categorias/${productId}`,'PUT',data)
     .then(()=>showToast('✅ Guardado'))
     .catch(e=>{console.log('Error:', e.message);});
 }
