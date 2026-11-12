@@ -1532,9 +1532,6 @@ function openCheckoutModal(){
   document.getElementById('checkout-direccion').value = '';
   document.getElementById('checkout-localidad').value = '';
   document.getElementById('pay-alias').textContent = PAY_ALIAS;
-  document.getElementById('pay-cvu').textContent = PAY_CVU;
-  document.getElementById('pay-titular').textContent = PAY_TITULAR;
-  document.getElementById('pay-mp-link').href = PAY_MP_LINK;
   closeCart();
   checkoutGoStep(1);
   document.getElementById('checkout-overlay').classList.add('open');
@@ -2197,10 +2194,7 @@ setTimeout(()=>{
         </div>
         <div class="pay-info" id="pay-info-transferencia" style="display:none">
           <div class="pay-row"><div><div class="pay-row-lbl">Alias</div><div class="pay-row-val" id="pay-alias"></div></div><button type="button" class="pay-copy" onclick="copyPayData('alias')">Copiar</button></div>
-          <div class="pay-row"><div><div class="pay-row-lbl">CVU</div><div class="pay-row-val" id="pay-cvu"></div></div><button type="button" class="pay-copy" onclick="copyPayData('cvu')">Copiar</button></div>
-          <div class="pay-row"><div><div class="pay-row-lbl">Titular</div><div class="pay-row-val" id="pay-titular"></div></div></div>
-          <a class="pay-mp" id="pay-mp-link" href="#" target="_blank" rel="noopener">Transferir con Mercado Pago</a>
-          <div style="margin-top:10px">Cuando transfieras, enviá el comprobante por WhatsApp.</div>
+          <div style="margin-top:10px">Primero finalizá el pedido por WhatsApp. Después transferí y mandanos el comprobante por ahí.</div>
         </div>
         <div class="pay-info" id="pay-info-efectivo" style="display:none">
           Pagás en efectivo cuando recibís el pedido.
@@ -2231,7 +2225,7 @@ setTimeout(()=>{
           <div class="checkout-summary-discount" id="checkout-summary-discount" style="display:none"></div>
           <div class="checkout-summary-cuotas" id="checkout-summary-cuotas"></div>
         </div>
-        <button class="btn-checkout-send" onclick="sendToWhatsApp()">💬 Enviar pedido por WhatsApp</button>
+        <button class="btn-checkout-send" onclick="sendToWhatsApp()">💬 Finalizar pedido por WhatsApp</button>
         <button class="checkout-back" onclick="checkoutGoStep('pay')">← Volver</button>
       </div>
 
