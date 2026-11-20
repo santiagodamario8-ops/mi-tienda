@@ -152,6 +152,44 @@ body.may .wh-flyer{display:none}
 .ship-note{font-size:12px;margin-top:6px;font-weight:600}
 .ship-note.ok{color:#16a34a}
 .ship-note.info{color:#b45309}
+.ship-note.free{display:flex;align-items:center;gap:8px;margin-top:8px;padding:9px 12px;border-radius:8px;background:#e8f7ee;border:1.5px solid #86d7a6;color:#15803d;font-size:13px;font-weight:700}
+.ship-ico{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#16a34a;color:#fff;display:inline-flex;align-items:center;justify-content:center}
+
+/* FRANJA DE ENVIO GRATIS */
+.ship-strip{display:flex;align-items:center;gap:14px;padding:12px 20px}
+.ship-strip .ss-ico{flex-shrink:0;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.ship-strip .ss-body{flex:1;min-width:0}
+.ship-strip .ss-title{font-size:14px;font-weight:700;line-height:1.3}
+.ship-strip .ss-list{font-size:12px;line-height:1.5;margin-top:2px}
+.ship-strip .ss-more{display:none;background:none;border:none;padding:0;margin-top:2px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:underline;font-family:inherit}
+.ship-com{background:#e9f7ef;border-bottom:1px solid #bfe6cf}
+.ship-com .ss-wrap{max-width:1300px;margin:0 auto;width:100%;display:flex;align-items:center;gap:14px}
+.ship-com .ss-ico{background:#16a34a;color:#fff}
+.ship-com .ss-title{color:#14532d}
+.ship-com .ss-title b{color:#15803d}
+.ship-com .ss-list{color:#3f6b52}
+.ship-com .ss-more{color:#15803d}
+body.may .ship-com{display:none}
+.ship-may{display:none}
+body.may .ship-may.on{display:flex;margin:-8px 0 22px;border:1.5px solid #2f7d4f;border-radius:6px;background:#eef6f0}
+.ship-may .ss-ico{background:#2f7d4f;color:#fff}
+.ship-may .ss-title{color:var(--text)}
+.ship-may .ss-title b{font-family:'IBM Plex Mono',monospace;color:#2f7d4f}
+.ship-may .ss-list{color:var(--text2)}
+.ship-may .ss-more{color:#2f7d4f}
+.gt-ship:empty{display:none}
+.gt-ship{grid-column:1/-1}
+.gt-ship .ship-note.free{margin-top:0}
+@media(max-width:600px){
+  .ship-strip{padding:10px 14px;gap:10px}
+  .ship-com .ss-wrap{gap:10px}
+  .ship-strip .ss-ico{width:32px;height:32px}
+  .ship-strip .ss-title{font-size:13px}
+  .ship-strip .ss-list{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .ship-strip.open .ss-list{display:block}
+  .ship-strip .ss-more{display:inline-block}
+  .ship-strip.open .ss-more{display:none}
+}
 .checkout-header{background:var(--blue1);padding:18px 22px;display:flex;align-items:center;justify-content:space-between}
 .checkout-header h3{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#fff}
 .checkout-close{background:none;border:none;font-size:22px;cursor:pointer;color:rgba(255,255,255,.7);line-height:1}
@@ -595,12 +633,15 @@ body.may .wh-flyer{display:none}
   </div>
 </section>
 
+<div class="ship-strip ship-com" id="ship-com"></div>
+
 <div class="cats-bar">
   <div class="cats-inner" id="cats-bar"></div>
 </div>
 
 <div class="main">
   <div class="may-tiers" id="may-tiers"></div>
+  <div class="ship-strip ship-may" id="ship-may"></div>
   <div class="results-count" id="results-count"></div>
   <div id="grid-container"><div class="grid-state">Cargando productos…</div></div>
 </div>
@@ -936,8 +977,9 @@ body.may .wh-flyer{display:none}
       <div class="gt-field full"><label for="gt-comercio">Nombre del comercio</label><input id="gt-comercio" type="text" autocomplete="organization" maxlength="120" placeholder="Opcional"></div>
       <div class="gt-field"><label for="gt-email">Email *</label><input id="gt-email" type="email" autocomplete="email" maxlength="160"></div>
       <div class="gt-field"><label for="gt-tel">WhatsApp / Teléfono *</label><input id="gt-tel" type="tel" autocomplete="tel" maxlength="40" placeholder="Ej: 3462 123456"></div>
-      <div class="gt-field"><label for="gt-dir">Dirección *</label><input id="gt-dir" type="text" autocomplete="street-address" maxlength="160"></div>
-      <div class="gt-field"><label for="gt-loc">Localidad *</label><input id="gt-loc" type="text" autocomplete="address-level2" maxlength="80"></div>
+      <div class="gt-field"><label for="gt-dir">Dirección *</label><input id="gt-dir" type="text" autocomplete="street-address" maxlength="160" oninput="updateGateShip()"></div>
+      <div class="gt-field"><label for="gt-loc">Localidad *</label><input id="gt-loc" type="text" autocomplete="address-level2" maxlength="80" oninput="updateGateShip()"></div>
+      <div class="gt-ship" id="gt-ship"></div>
     </div>
     <div class="gt-err" id="gt-err"></div>
     <button type="submit" class="gt-submit" id="gt-submit">Ver precios mayoristas</button>
@@ -1798,7 +1840,62 @@ const PAY_ALIAS = 'nexar.store';
 const PAY_CVU = '0000003100077794467854';
 const PAY_TITULAR = 'Santiago German Damario';
 const PAY_MP_LINK = 'https://mpago.la/2T1yUJ4';
-const ENVIO_GRATIS_MIN = 15000; // envío gratis en Venado Tuerto desde este monto
+// ENVIO GRATIS: localidades y monto minimo (web comun / mayorista)
+const ENVIO_GRATIS_MIN = IS_MAY ? 50000 : 20000;
+const ENVIO_LOCS = [
+  ['Venado Tuerto',['venado tuerto','venado']],
+  ['Monte Maíz',['monte maiz']],
+  ['Isla Verde',['isla verde']],
+  ['Baldissera',['baldissera','baldisera']],
+  ['Cañada de Ucle',['canada de ucle']],
+  ['Los Quirquinchos',['los quirquinchos','quirquinchos']],
+  ['Godeken',['godeken']],
+  ['Berabevú',['berabevu','beravebu','berabebu']],
+  ['Chañar Ladeado',['chanar ladeado']],
+  ['Cafferata',['cafferata','caferata','caffaratta']],
+  ['Cavanagh',['cavanagh','cavanag']],
+  ['Guatimozín',['guatimozin','guati']],
+  ['Teodelina',['teodelina']],
+  ['Villa Cañás',['villa canas']],
+  ['Santa Isabel',['santa isabel']],
+  ['Hughes',['hughes','hugues','hugh']],
+  ['Wheelwright',['wheelwright','wheelright','wilwright']],
+  ['Colón',['colon']],
+  ['Diego de Alvear',['diego de alvear']],
+  ['San Gregorio',['san gregorio']],
+  ['Christophersen',['christophersen','cristophersen','christopersen','cristofersen']],
+  ['María Teresa',['maria teresa']]
+];
+function normLoc(s){ return ' '+String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()+' '; }
+function isFreeShipLoc(s){
+  const t = normLoc(s);
+  if(t.trim()==='') return false;
+  return ENVIO_LOCS.some(([,al])=>al.some(a=>t.includes(' '+a+' ')));
+}
+function freeLocsText(){
+  const n = ENVIO_LOCS.map(x=>x[0]);
+  return n.slice(0,-1).join(', ')+' y '+n[n.length-1];
+}
+const SHIP_CHECK = '<span class="ship-ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>';
+const TRUCK_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4h13v12H1zM14 8h4l3 4v4h-7"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="17.5" cy="18.5" r="2"/></svg>';
+function renderShipStrips(){
+  const html = `<div class="ss-ico">${TRUCK_SVG}</div>
+    <div class="ss-body">
+      <div class="ss-title">Envío gratis desde <b>${fmt(ENVIO_GRATIS_MIN)}</b> si sos de:</div>
+      <div class="ss-list">${freeLocsText()}.</div>
+      <button class="ss-more" onclick="this.closest('.ship-strip').classList.add('open')">Ver todas las localidades</button>
+    </div>`;
+  const com = document.getElementById('ship-com');
+  if(com) com.innerHTML = `<div class="ss-wrap">${html}</div>`;
+  const may = document.getElementById('ship-may');
+  if(may) may.innerHTML = html;
+}
+function updateGateShip(){
+  const el = document.getElementById('gt-ship');
+  if(!el) return;
+  const txt = document.getElementById('gt-loc').value+' '+document.getElementById('gt-dir').value;
+  el.innerHTML = isFreeShipLoc(txt) ? `<div class="ship-note free">${SHIP_CHECK}¡Tenés envío sin cargo!</div>` : '';
+}
 const PAY_NAMES = {tarjeta:'Tarjeta de crédito o débito (link Getnet)', transferencia:'Transferencia / Mercado Pago', efectivo:'Efectivo al recibir'};
 
 function itemInPromo(i, promo){
@@ -1924,9 +2021,6 @@ function copyPayData(what){
   }
 }
 
-function isVenadoTuerto(s){
-  return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').includes('venado tuerto');
-}
 
 function methodTotal(t){ return _payMethod==='tarjeta' ? t.cardTotal : t.cashFinal; }
 
@@ -1934,11 +2028,12 @@ function shippingInfo(){
   const loc = document.getElementById('checkout-localidad').value.trim();
   if(!loc) return null;
   const total = methodTotal(computeTotals());
-  if(isVenadoTuerto(loc)){
-    if(total >= ENVIO_GRATIS_MIN) return {cls:'ok', txt:'Envío gratis en Venado Tuerto'};
-    return {cls:'info', txt:`Envío a Venado Tuerto: gratis desde ${fmt(ENVIO_GRATIS_MIN)}. El costo te lo confirmamos por WhatsApp`};
+  const dir = document.getElementById('checkout-direccion').value;
+  if(isFreeShipLoc(loc+' '+dir)){
+    if(total >= ENVIO_GRATIS_MIN) return {cls:'free', txt: IS_MAY ? '¡Tenés envío sin cargo!' : 'Envío gratis a tu localidad'};
+    return {cls:'info', txt:`Envío gratis a tu localidad desde ${fmt(ENVIO_GRATIS_MIN)}. Si no llegás, el costo te lo confirmamos por WhatsApp`};
   }
-  return {cls:'info', txt:'Envío fuera de Venado Tuerto: te pasamos la cotización por WhatsApp'};
+  return {cls:'info', txt:'Envío a tu localidad: te pasamos la cotización por WhatsApp'};
 }
 
 function updateCheckoutSummary(){
@@ -1966,7 +2061,7 @@ function updateCheckoutSummary(){
   }
   const note = document.getElementById('ship-note');
   const s = shippingInfo();
-  note.textContent = s ? s.txt : '';
+  note.innerHTML = s ? (s.cls==='free' ? SHIP_CHECK : '')+esc(s.txt) : '';
   note.className = 'ship-note' + (s ? ' '+s.cls : '');
 }
 
@@ -2497,6 +2592,8 @@ const CHECK_SVG = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" s
 function renderMayTiers(sub){
   const el=document.getElementById('may-tiers');
   if(!el) return;
+  const shipMay=document.getElementById('ship-may');
+  if(shipMay) shipMay.classList.toggle('on', !!mayLead);
   if(!mayLead){ el.classList.remove('on'); return; }
   if(!el.dataset.built){
     el.innerHTML=`<div class="mt-head">
@@ -2652,6 +2749,7 @@ function openMayGate(){
   document.getElementById('gt-loc').value=l.localidad||'';
   document.getElementById('gt-err').textContent='';
   document.getElementById('may-gate').classList.add('open');
+  updateGateShip();
   setTimeout(()=>{ const f=document.getElementById('gt-nombre'); if(f && !f.value) f.focus(); },60);
 }
 async function submitMayGate(e){
@@ -2808,6 +2906,8 @@ function exportMayCSV(){
   document.body.appendChild(a); a.click(); a.remove();
 }
 
+renderShipStrips();
+
 // Arranque del modo mayorista
 if(IS_MAY){
   document.title='NexarStore · Mayorista';
@@ -2906,7 +3006,7 @@ setTimeout(()=>{
         </div>
         <div class="checkout-form-group">
           <label>Dirección *</label>
-          <input type="text" id="checkout-direccion" placeholder="Ej: Av. San Martín 450">
+          <input type="text" id="checkout-direccion" placeholder="Ej: Av. San Martín 450" oninput="updateCheckoutSummary()">
         </div>
         <div class="checkout-form-group">
           <label>Localidad *</label>
