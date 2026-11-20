@@ -3,6 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NexarStore</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@500;600&amp;display=swap" rel="stylesheet">
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -53,14 +54,34 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .ig-btn:hover{opacity:.85}
 .ig-btn span{display:inline}
 
-/* WHOLESALE BANNER */
-.wholesale-banner{background:linear-gradient(135deg,var(--blue2),var(--blue1));border-bottom:2px solid var(--blue3);padding:10px 20px}
-.wholesale-inner{max-width:1300px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
-.wholesale-text{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.9);font-size:13px;line-height:1.4}
-.wholesale-icon{font-size:20px;flex-shrink:0}
-.wholesale-text strong{color:#fff}
-.wholesale-btn{display:flex;align-items:center;gap:7px;padding:9px 18px;background:var(--green);color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700;white-space:nowrap;transition:background .15s;flex-shrink:0}
-.wholesale-btn:hover{background:#1da855}
+/* FLYER MAYORISTA (web comun) */
+.wh-flyer{background:var(--blue1);color:#fff;border-bottom:1px solid #1d2a40;position:relative;overflow:hidden}
+.wh-flyer::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.035) 0 2px,transparent 2px 14px);pointer-events:none}
+.wh-flyer::after{content:'';position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(224,128,47,.22),transparent 65%);pointer-events:none}
+.wh-inner{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:36px 20px;display:flex;align-items:center}
+.wh-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:#f0a35e;margin-bottom:12px}
+.wh-title{font-family:'Archivo',sans-serif;font-size:clamp(26px,3.6vw,44px);font-weight:800;line-height:1.05;letter-spacing:-.8px;max-width:640px}
+.wh-title span{color:#f0a35e}
+.wh-sub{margin-top:14px;font-size:14px;color:rgba(255,255,255,.72);line-height:1.55;max-width:540px}
+.wh-cta{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:15px 28px;background:#e0802f;color:#14161a;border-radius:6px;font-family:'Archivo',sans-serif;font-weight:800;font-size:15px;letter-spacing:1.2px;text-decoration:none;text-transform:uppercase;transition:transform .18s,background .18s,box-shadow .18s;box-shadow:0 8px 24px rgba(224,128,47,.28)}
+.wh-cta:hover{background:#f0a35e;transform:translateY(-2px)}
+.wh-cta svg{transition:transform .2s}
+.wh-cta:hover svg{transform:translateX(4px)}
+.wh-tiers{display:flex;flex-direction:column;gap:9px}
+.wh-tier{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:13px 18px;border:1px solid rgba(255,255,255,.13);border-radius:6px;background:rgba(255,255,255,.04)}
+.wh-tier:nth-child(2){margin-left:22px}
+.wh-tier:nth-child(3){margin-left:44px}
+.wh-tier b{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:#f0a35e;white-space:nowrap}
+.wh-tier span{font-size:13px;color:rgba(255,255,255,.78)}
+body.may .wh-flyer{display:none}
+@media(max-width:760px){
+  .wh-inner{grid-template-columns:1fr;padding:26px 16px;gap:18px}
+  .wh-tiers{flex-direction:row}
+  .wh-tier,.wh-tier:nth-child(2),.wh-tier:nth-child(3){margin-left:0;flex:1;flex-direction:column;gap:2px;padding:10px 10px}
+  .wh-tier b{font-size:17px}
+  .wh-tier span{font-size:11px}
+  .wh-cta{width:100%;justify-content:center}
+}
 
 /* CATS BAR */
 .cats-bar{background:var(--blue2);border-bottom:1px solid var(--blue3);overflow-x:auto;position:sticky;top:64px;z-index:99}
@@ -315,8 +336,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   .cart-btn{padding:6px 10px;font-size:12px}
   .ig-btn span{display:none}
   .ig-btn{padding:7px 9px}
-  .wholesale-text{font-size:12px}
-  .wholesale-btn{font-size:12px;padding:8px 12px}
   .admin-user{display:none}
 }
 
@@ -368,6 +387,158 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   .fb-loading-logo span{color:#4A9FE0}
   .fb-loading-spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,.2);border-top-color:#4A9FE0;border-radius:50%;animation:spin .8s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
+  /* ============ MODO MAYORISTA ============ */
+  body.may{
+    --blue1:#16181d;--blue2:#262a31;--blue3:#c8691c;--blue4:#dd8338;--blue5:#f0a35e;--accent:#c8691c;--accent2:#dd8338;
+    --bg:#eeeae2;--bg2:#fbfaf7;--border:#dcd5c7;--text:#16181d;--text2:#4a4d55;--text3:#8a8478;
+    font-family:'Archivo',sans-serif
+  }
+  .may-badge{display:none}
+  body.may .may-badge{display:inline-flex;align-items:center;padding:3px 8px;border:1px solid var(--blue5);color:var(--blue5);border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase}
+  body.may .header{box-shadow:none;border-bottom:1px solid #2b2f37}
+  body.may .search-wrap input{border-color:#3a3f48}
+  body.may .cats-bar{border-bottom-color:#33373f}
+  body.may .cat-btn{border-radius:4px}
+  body.may .card{border-radius:6px}
+  body.may .card:hover{box-shadow:0 10px 28px rgba(22,24,29,.12);border-color:var(--text)}
+  body.may .card-img-wrap,body.may .card-img-placeholder{background:#f3f0ea}
+  body.may .card-price,body.may .cart-total-amt,body.may .product-detail-price-new,body.may .pay-opt-price,body.may .checkout-summary-total{font-family:'IBM Plex Mono',monospace;color:var(--text)}
+  body.may .card-price{font-size:17px}
+  body.may .btn-add:hover,body.may .btn-add.added{background:#f6ece1}
+  body.may .section-title{font-family:'Archivo',sans-serif;text-transform:uppercase;letter-spacing:1.2px;font-size:14px;color:var(--text);border-bottom:2px solid var(--text)}
+  body.may .cart-header h2,body.may .checkout-header h3{font-family:'Archivo',sans-serif;letter-spacing:.3px}
+  body.may .btn-checkout,body.may .btn-checkout-send{font-family:'Archivo',sans-serif;letter-spacing:1px}
+  body.may .pay-opt.selected{background:#fbf3ea}
+  body.may .pay-info,body.may .checkout-summary{background:#f7f4ee}
+  body.may #pay-opt-tarjeta,body.may .pay-sep{display:none}
+
+  /* Escalas arriba de todo */
+  .may-tiers{display:none}
+  body.may .may-tiers.on{display:block;margin-bottom:22px}
+  .mt-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .mt-hello{font-size:13px;color:var(--text2)}
+  .mt-hello strong{color:var(--text)}
+  .mt-hello button{background:none;border:none;color:var(--blue3);font-weight:600;cursor:pointer;text-decoration:underline;font-size:12px;font-family:inherit;margin-left:6px}
+  .mt-pay{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
+  .mt-grid{display:grid;grid-template-columns:1.35fr 1fr 1fr 1fr;border:1.5px solid var(--text);border-radius:6px;overflow:hidden;background:var(--bg2)}
+  .mt-cell{padding:16px 18px;border-right:1px solid var(--border);position:relative;transition:background .4s}
+  .mt-cell:last-child{border-right:none}
+  .mt-k{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
+  .mt-v{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600;color:var(--text);margin-top:6px;line-height:1}
+  .mt-d{font-size:12px;color:var(--text2);margin-top:7px}
+  .mt-cell.min{background:var(--text)}
+  .mt-cell.min .mt-k{color:var(--blue5)}
+  .mt-cell.min .mt-v{color:#fff}
+  .mt-cell.min .mt-d{color:rgba(255,255,255,.7)}
+  .mt-cell.reached{background:#f8ecdd}
+  .mt-cell.min.reached{background:#1e3a2a}
+  .mt-cell .mt-ok{display:none;position:absolute;top:12px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:1px;color:var(--blue3)}
+  .mt-cell.min .mt-ok{color:#86d7a6}
+  .mt-cell.reached .mt-ok{display:block}
+
+  /* Objetivos en el carrito */
+  .may-goals{display:none}
+  body.may .may-goals{display:block;padding:14px 22px 12px;border-bottom:1px solid var(--border);background:#f7f4ee}
+  .mgo-msg{font-size:13px;line-height:1.45;color:var(--text);margin-bottom:12px}
+  .mgo-msg strong{font-family:'IBM Plex Mono',monospace;font-weight:600}
+  .mgo-msg .save{color:#2f7d4f}
+  .mgo-row{display:grid;grid-template-columns:62px 1fr 74px;align-items:center;gap:10px;margin:7px 0;font-size:11px}
+  .mgo-lbl{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.6px}
+  .mgo-bar{height:8px;background:#e4ddd0;border-radius:2px;overflow:hidden}
+  .mgo-fill{height:100%;width:0;background:var(--blue3);transition:width .6s cubic-bezier(.2,.8,.2,1),background .3s}
+  .mgo-val{text-align:right;font-family:'IBM Plex Mono',monospace;color:var(--text3);white-space:nowrap}
+  .mgo-row.done .mgo-fill{background:#2f7d4f}
+  .mgo-row.done .mgo-val{color:#2f7d4f;font-weight:600}
+  .mgo-units{margin-top:10px;padding-top:9px;border-top:1px dashed var(--border)}
+  .mgo-units .mgo-fill{background:#b4471f}
+  .mgo-units .mgo-val{color:#b4471f;font-weight:600}
+  .mgo-note{font-size:11px;color:#b4471f;margin-top:2px}
+  .may-sum{display:none}
+  body.may .may-sum{display:block;margin-bottom:6px}
+  .ms-row{display:flex;justify-content:space-between;font-size:13px;color:var(--text2);padding:2px 0}
+  .ms-row span:last-child{font-family:'IBM Plex Mono',monospace}
+  .ms-row.disc{color:#2f7d4f;font-weight:600}
+
+  /* Formulario de acceso */
+  .may-gate{display:none;position:fixed;inset:0;z-index:9000;background:rgba(22,24,29,.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto}
+  .may-gate.open{display:flex}
+  .gt-box{background:var(--bg2);border-radius:10px;width:100%;max-width:520px;margin:auto;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+  .gt-top{background:var(--text);color:#fff;padding:26px 26px 22px}
+  .gt-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blue5)}
+  .gt-title{font-size:26px;font-weight:800;line-height:1.1;letter-spacing:-.4px;margin-top:10px}
+  .gt-text{font-size:13px;color:rgba(255,255,255,.72);margin-top:10px;line-height:1.5}
+  .gt-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+  .gt-chips span{font-size:11px;padding:5px 9px;border:1px solid rgba(255,255,255,.2);border-radius:4px;color:rgba(255,255,255,.88)}
+  .gt-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:22px 26px 6px}
+  .gt-field{display:flex;flex-direction:column;gap:5px}
+  .gt-field.full{grid-column:1/-1}
+  .gt-field label{font-size:12px;font-weight:600;color:var(--text2)}
+  .gt-field input{padding:11px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:14px;outline:none;font-family:inherit;color:var(--text);background:#fff}
+  .gt-field input:focus{border-color:var(--blue3)}
+  .gt-err{color:#c0392b;font-size:13px;min-height:18px;padding:4px 26px 0}
+  .gt-submit{display:block;width:calc(100% - 52px);margin:8px 26px 0;padding:15px;background:var(--blue3);color:#fff;border:none;border-radius:6px;font-family:inherit;font-size:15px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:background .15s}
+  .gt-submit:hover{background:var(--blue4)}
+  .gt-submit:disabled{opacity:.6;cursor:default}
+  .gt-legal{font-size:11px;color:var(--text3);padding:10px 26px 0;line-height:1.4}
+  .gt-back{display:block;text-align:center;padding:14px 0 20px;font-size:13px;color:var(--text3);text-decoration:none}
+  .gt-back:hover{color:var(--blue3)}
+  @media(max-width:520px){.gt-fields{grid-template-columns:1fr}.gt-title{font-size:22px}}
+
+  /* Cartel de minimo */
+  .may-min{display:none;position:fixed;inset:0;z-index:260;background:rgba(22,24,29,.6);align-items:center;justify-content:center;padding:20px}
+  .may-min.open{display:flex}
+  .mm-box{background:var(--bg2);border-radius:10px;max-width:400px;width:100%;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,.35);border-top:4px solid var(--blue3)}
+  .mm-title{font-size:19px;font-weight:800;color:var(--text);line-height:1.2}
+  .mm-text{font-size:14px;color:var(--text2);margin-top:10px;line-height:1.5}
+  .mm-list{list-style:none;margin:14px 0 18px;padding:0;display:flex;flex-direction:column;gap:8px}
+  .mm-list li{font-size:13px;padding:10px 12px;background:#f8ecdd;border-radius:6px;color:var(--text)}
+  .mm-list b{font-family:'IBM Plex Mono',monospace}
+  .mm-btn{display:block;width:100%;padding:13px;background:var(--text);color:#fff;border:none;border-radius:6px;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer}
+  .mm-link{display:block;width:100%;margin-top:8px;padding:8px;background:none;border:none;color:var(--text3);font-family:inherit;font-size:13px;cursor:pointer}
+
+  /* Boton flotante de consulta */
+  .wa-float{display:none;position:fixed;right:18px;bottom:18px;z-index:205;align-items:center;gap:9px;background:#25D366;color:#fff;padding:12px 18px 12px 14px;border-radius:999px;font-family:'Archivo',sans-serif;font-weight:700;font-size:14px;text-decoration:none;box-shadow:0 10px 28px rgba(0,0,0,.25);transition:transform .18s,bottom .3s}
+  .wa-float:hover{transform:translateY(-2px)}
+  body.may .wa-float{display:flex}
+  body.may.cart-open .wa-float{bottom:calc(var(--cart-foot-h,200px) + 12px)}
+  @media(max-width:600px){
+    body.may .may-badge{display:none}
+    .mt-grid{grid-template-columns:repeat(3,1fr)}
+    .mt-cell{padding:12px 10px}
+    .mt-cell.min{grid-column:1/-1;padding:14px 14px}
+    .mt-cell:nth-child(n+2){border-top:1px solid var(--border)}
+    .mt-k{font-size:9px;letter-spacing:.6px}
+    .mt-v{font-size:18px}
+    .mt-cell.min .mt-v{font-size:22px}
+    .mt-d{font-size:11px}
+    .mt-cell:not(.min) .mt-d{display:none}
+    .mt-cell:not(.min) .mt-ok{top:auto;bottom:8px;right:auto;left:10px;font-size:8px}
+    .mt-cell:not(.min).reached{padding-bottom:22px}
+    .wa-float{font-size:13px;padding:10px 14px 10px 12px;right:12px;bottom:12px}
+  }
+
+  /* Admin: mayoristas */
+  .mad-stats{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 14px}
+  .mad-stat{padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:#f8faff;font-size:12px;color:var(--text3)}
+  .mad-stat b{display:block;font-size:18px;color:var(--text)}
+  .mad-list{display:flex;flex-direction:column;gap:10px}
+  .mad-item{border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;background:#fff}
+  .mad-top{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+  .mad-main{flex:1;min-width:220px}
+  .mad-name{font-size:15px;font-weight:700;color:var(--text)}
+  .mad-name span{font-weight:500;color:var(--text3)}
+  .mad-meta{font-size:12px;color:var(--text3);margin-top:3px;word-break:break-word}
+  .mad-status{font-size:12px;font-weight:700;padding:6px 10px;border-radius:6px;white-space:nowrap}
+  .mad-status.abierto{background:#fff1e0;color:#b45309}
+  .mad-status.enviado{background:#dcfce7;color:#16a34a}
+  .mad-status.sin{background:#f0f4fa;color:var(--text3)}
+  .mad-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+  .mad-actions a,.mad-actions button{padding:7px 12px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--text2);font-family:inherit}
+  .mad-actions a.wa{background:#25D366;border-color:#25D366;color:#fff}
+  .mad-actions button.del{color:#dc2626;border-color:#fecaca}
+  .mad-cart{margin-top:10px;font-size:12px;color:var(--text2)}
+  .mad-cart summary{cursor:pointer;font-weight:600;color:var(--blue3)}
+  .mad-cart ul{margin:8px 0 0 18px;line-height:1.6}
 </style>
   <!-- Firebase via REST (sin WebSocket) -->
   <script>
@@ -380,6 +551,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
 <body>
+<script>if(/^\/mayoristas(\/|$)/i.test(location.pathname))document.body.classList.add('may');</script>
 
 <!-- SPLASH LOADER -->
 <div id="fb-loading">
@@ -389,8 +561,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 
 <header class="header">
   <div class="header-inner">
-    <a class="logo-wrap" href="/">
+    <a class="logo-wrap" id="logo-link" href="/">
       <span class="logo-text">NEXAR<span>STORE</span></span>
+      <span class="may-badge">Mayorista</span>
     </a>
     <a href="https://www.instagram.com/NexarStoreOk" target="_blank" class="ig-btn" title="Seguinos en Instagram">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
@@ -409,23 +582,25 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   <button class="admin-btn" onclick="openLogin()">⚙️ Admin</button>
 </header>
 
+<section class="wh-flyer">
+  <div class="wh-inner">
+    <div>
+      <div class="wh-eyebrow">Compras mayoristas</div>
+      <h2 class="wh-title">¿Tenés un comercio? <span>Comprá por mayor</span> y ganá en cada venta.</h2>
+      <p class="wh-sub">Si querés hacer una compra mayorista, tocá el botón: accedés a nuestra lista de precios mayoristas y armás tu pedido para tu comercio.</p>
+      <a class="wh-cta" href="/mayoristas">Web mayorista
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
 <div class="cats-bar">
   <div class="cats-inner" id="cats-bar"></div>
 </div>
 
-<div class="wholesale-banner">
-  <div class="wholesale-inner">
-    <div class="wholesale-text">
-      <span class="wholesale-icon">🏪</span>
-      <span>¿Tenés un comercio? Si te interesa revender, consultá por nuestros <strong>precios mayoristas</strong></span>
-    </div>
-    <a class="wholesale-btn" href="https://wa.me/5493462343241?text=Hola%2C%20quiero%20consultar%20por%20precios%20mayoristas!" target="_blank">
-      💬 Consultar por WhatsApp
-    </a>
-  </div>
-</div>
-
 <div class="main">
+  <div class="may-tiers" id="may-tiers"></div>
   <div class="results-count" id="results-count"></div>
   <div id="grid-container"><div class="grid-state">Cargando productos…</div></div>
 </div>
@@ -434,11 +609,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
 <div class="cart-panel" id="cart-panel">
   <div class="cart-header">
-    <h2>🛒 Tu carrito</h2>
+    <h2 id="cart-title">🛒 Tu carrito</h2>
     <button class="cart-close" onclick="closeCart()">✕</button>
   </div>
+  <div class="may-goals" id="may-goals"></div>
   <div class="cart-items" id="cart-items-list"><p class="cart-empty">El carrito está vacío</p></div>
   <div class="cart-footer">
+    <div class="may-sum" id="may-sum"></div>
     <div class="cart-total-row">
       <span class="cart-total-lbl">Total</span>
       <span class="cart-total-amt" id="cart-total">$0</span>
@@ -478,6 +655,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <div class="admin-tab" onclick="adminTab('agregar')">➕ Agregar</div>
       <div class="admin-tab" onclick="adminTab('categorias')">📂 Categorías</div>
       <div class="admin-tab" onclick="adminTab('promos')">🎟️ Promociones</div>
+      <div class="admin-tab" onclick="adminTab('mayoristas')">Mayoristas</div>
       <div class="admin-tab" onclick="adminTab('config')">🔧 Configuración</div>
     </div>
     <div class="admin-body">
@@ -639,6 +817,25 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         </div>
       </div>
 
+      <!-- TAB: MAYORISTAS -->
+      <div class="admin-section" id="tab-mayoristas">
+        <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+          <h3 style="font-size:16px;font-weight:600;color:var(--blue2)">Clientes mayoristas</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select id="may-adm-filter" onchange="renderMayAdmin()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;outline:none">
+              <option value="">Todos</option>
+              <option value="abierto">Carrito sin confirmar</option>
+              <option value="enviado">Pedido enviado</option>
+              <option value="sin">Sin carrito</option>
+            </select>
+            <button class="btn-primary" onclick="loadMayAdmin()" style="padding:8px 14px;font-size:13px">Actualizar</button>
+            <button onclick="exportMayCSV()" style="padding:8px 14px;background:#f0f4fa;border:1.5px solid var(--border);border-radius:8px;font-size:13px;cursor:pointer">Descargar CSV</button>
+          </div>
+        </div>
+        <div class="mad-stats" id="may-adm-stats"></div>
+        <div class="mad-list" id="may-adm-list"></div>
+      </div>
+
       <!-- TAB: CONFIG -->
       <div class="admin-section" id="tab-config">
         <h3 style="font-size:16px;font-weight:600;color:var(--blue2);margin-bottom:16px">Configuración general</h3>
@@ -725,8 +922,64 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 
 <div class="toast" id="toast"></div>
 
+<!-- MAYORISTA: acceso con datos -->
+<div class="may-gate" id="may-gate">
+  <form class="gt-box" onsubmit="submitMayGate(event)" novalidate>
+    <div class="gt-top">
+      <div class="gt-eyebrow">Nexar Store · Mayorista</div>
+      <div class="gt-title">Accedé a la lista de precios mayoristas</div>
+      <div class="gt-text">Completá tus datos para ver los precios. Los usamos solo para gestionar tus pedidos y contactarte.</div>
+      <div class="gt-chips"><span>Mínimo $50.000 y 3 unidades surtidas</span><span>Hasta 7% OFF por volumen</span><span>Efectivo o transferencia</span></div>
+    </div>
+    <div class="gt-fields">
+      <div class="gt-field full"><label for="gt-nombre">Nombre y apellido *</label><input id="gt-nombre" type="text" autocomplete="name" maxlength="120"></div>
+      <div class="gt-field full"><label for="gt-comercio">Nombre del comercio</label><input id="gt-comercio" type="text" autocomplete="organization" maxlength="120" placeholder="Opcional"></div>
+      <div class="gt-field"><label for="gt-email">Email *</label><input id="gt-email" type="email" autocomplete="email" maxlength="160"></div>
+      <div class="gt-field"><label for="gt-tel">WhatsApp / Teléfono *</label><input id="gt-tel" type="tel" autocomplete="tel" maxlength="40" placeholder="Ej: 3462 123456"></div>
+      <div class="gt-field"><label for="gt-dir">Dirección *</label><input id="gt-dir" type="text" autocomplete="street-address" maxlength="160"></div>
+      <div class="gt-field"><label for="gt-loc">Localidad *</label><input id="gt-loc" type="text" autocomplete="address-level2" maxlength="80"></div>
+    </div>
+    <div class="gt-err" id="gt-err"></div>
+    <button type="submit" class="gt-submit" id="gt-submit">Ver precios mayoristas</button>
+    <div class="gt-legal">Tus datos quedan guardados solo para Nexar Store. No los compartimos con nadie.</div>
+    <a class="gt-back" href="/">Volver a la tienda</a>
+  </form>
+</div>
+
+<!-- MAYORISTA: cartel de minimo -->
+<div class="may-min" id="may-min" onclick="if(event.target===this)closeMayMin()">
+  <div class="mm-box">
+    <div class="mm-title">Todavía no llegaste al mínimo mayorista</div>
+    <p class="mm-text">El mínimo de compra mayorista es de <b>$50.000</b> y <b>3 unidades</b>, que pueden ser surtidas.</p>
+    <ul class="mm-list" id="mm-list"></ul>
+    <button class="mm-btn" onclick="closeMayMin();closeCart()">Seguir comprando</button>
+    <button class="mm-link" onclick="closeMayMin()">Volver al carrito</button>
+  </div>
+</div>
+
+<!-- MAYORISTA: consulta por WhatsApp -->
+<a class="wa-float" id="wa-float" href="#" target="_blank" rel="noopener">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg>
+  <span>¿Tenés una consulta?</span>
+</a>
+
 <script>
 let WA = '5493462343241';
+
+// ============================================================
+// MODO MAYORISTA (/mayoristas)
+// ============================================================
+const IS_MAY = document.body.classList.contains('may');
+const BASE = IS_MAY ? '/mayoristas' : '';
+const MAY_COL = 33;          // columna AH de FORMADOR DE PRECIOS
+const MAY_MIN = 50000;       // monto minimo
+const MAY_MIN_U = 3;         // unidades minimas (surtidas)
+const MAY_TIERS = [{min:100000,pct:3},{min:200000,pct:5},{min:250000,pct:7}];
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+let mayLead = null;
+try{ mayLead = JSON.parse(lsGet('nx_may_lead')||'null'); }catch(e){ mayLead = null; }
+let mayCartRestored = false;
 let WA_MSG = 'Hola, quiero comprar el producto';
 let editingId = null;
 
@@ -863,7 +1116,7 @@ function cardHTML(p){
       <div class="card-prices">
         ${p.lista>p.oferta?`<div class="card-old">${fmt(p.lista)}</div>`:''}
         <div class="card-price">${fmt(p.oferta)}</div>
-        <div style="font-size:10px;color:var(--text3);font-weight:600;margin-top:1px">EFECTIVO / TRANSFERENCIA</div>
+        <div style="font-size:10px;color:var(--text3);font-weight:600;margin-top:1px">${IS_MAY?'PRECIO MAYORISTA · EFECTIVO / TRANSFERENCIA':'EFECTIVO / TRANSFERENCIA'}</div>
         ${p.cuotas?`<div class="card-cuotas">o ${p.ncuotas} cuotas de ${fmt(p.cuotas)}</div>`:''}
       </div>
       <div class="card-btns">
@@ -901,6 +1154,11 @@ function getFiltered(){
 function renderGrid(){
   const container=document.getElementById('grid-container');
   const countEl=document.getElementById('results-count');
+  if(IS_MAY && !mayLead){
+    countEl.textContent='';
+    container.innerHTML=`<div class="grid-state">Completá tus datos para ver los precios mayoristas.<br><button onclick="openMayGate()">Completar datos</button></div>`;
+    return;
+  }
   if(!products.length){
     countEl.textContent='';
     if(sheetsFailed){
@@ -943,8 +1201,8 @@ function setCat(cat,btn){
   if(btn)btn.classList.add('active');
   renderGrid();
   window.scrollTo({top:0,behavior:'smooth'});
-  if(cat==='all') window.history.pushState({},'','/');
-  else window.history.pushState({cat:cat},'',`/${cat===NEW_KEY?NEW_SLUG:cat}`);
+  if(cat==='all') window.history.pushState({},'',BASE||'/');
+  else window.history.pushState({cat:cat},'',`${BASE}/${cat===NEW_KEY?NEW_SLUG:cat}`);
 }
 
 function onSearch(q){searchQ=q.toLowerCase().trim();renderGrid();}
@@ -980,7 +1238,15 @@ function updateCart(){
   document.getElementById('cart-total').textContent=fmt(total);
   const list=document.getElementById('cart-items-list');
   window._cartTotal = total;
+  window._cartUnits = count;
   window._cartMsg = items.map(i=>`- ${i.name} (x${i.qty}) - ${fmt(i.oferta*i.qty)}`).join('\n');
+  if(IS_MAY){
+    const t = mayTotals(total);
+    document.getElementById('cart-total').textContent=fmt(t.final);
+    try{ renderMayGoals(total,count,t); renderMaySum(t); renderMayTiers(total); }catch(e){ console.error(e); }
+    saveMayCartLocal(); scheduleMayCartSync();
+    setTimeout(setCartFootH,0);
+  }
   if(!items.length){list.innerHTML='<p class="cart-empty">El carrito está vacío</p>';return;}
   list.innerHTML=items.map(i=>{
     const src=getImgSrc(i);
@@ -1038,12 +1304,12 @@ function openProductDetail(productId){
   const thumbsDiv=document.getElementById('product-detail-thumbs');
   thumbsDiv.innerHTML=images.length>1?images.map((img,i)=>`<img src="${img}" class="product-detail-thumb${i===0?' active':''}" onclick="switchDetailImage(${i})" alt="" onerror="imgOnerror(this,'${esc(p.imgname||p.id)}','')">`).join(''):'';
   document.getElementById('product-detail-overlay').classList.add('open');
-  window.history.pushState({productId:productId},'',`/producto/${productId}`);
+  window.history.pushState({productId:productId},'',`${BASE}/producto/${productId}`);
 }
 function closeProductDetail(){
   document.getElementById('product-detail-overlay').classList.remove('open');
   currentDetailProduct=null;
-  window.history.pushState({},'','/');
+  window.history.pushState({},'',BASE||'/');
 }
 function switchDetailImage(index){
   currentDetailImageIndex=index;
@@ -1071,7 +1337,7 @@ function closeLightbox(){
 
 function shareProduct(){
   if(!currentDetailProduct)return;
-  const url = `${window.location.origin}/producto/${currentDetailProduct.id}`;
+  const url = `${window.location.origin}${BASE}/producto/${currentDetailProduct.id}`;
   const text = `${currentDetailProduct.name} - ${currentDetailProduct.desc}`;
   if(navigator.share){
     navigator.share({title: currentDetailProduct.name, text: text, url: url}).catch(()=>{});
@@ -1099,8 +1365,9 @@ function buyFromDetail(){
   buyNow(id);
 }
 
-function openCart(){document.getElementById('cart-panel').classList.add('open');document.getElementById('cart-overlay').classList.add('open');}
-function closeCart(){document.getElementById('cart-panel').classList.remove('open');document.getElementById('cart-overlay').classList.remove('open');}
+function openCart(){document.getElementById('cart-panel').classList.add('open');document.getElementById('cart-overlay').classList.add('open');document.body.classList.add('cart-open');setCartFootH();}
+function closeCart(){document.getElementById('cart-panel').classList.remove('open');document.getElementById('cart-overlay').classList.remove('open');document.body.classList.remove('cart-open');}
+function setCartFootH(){ const f=document.querySelector('.cart-footer'); if(f) document.body.style.setProperty('--cart-foot-h', f.offsetHeight+'px'); }
 
 // ============================================================
 // FIREBASE: lectura pública + escritura autenticada (Firebase Authentication por REST)
@@ -1220,13 +1487,14 @@ function closeAdmin(){document.getElementById('admin-overlay').classList.remove(
 
 function adminTab(name){
   if(!fbAuth){ openLogin(); return; }
-  const names=['productos','agregar','categorias','promos','config'];
+  const names=['productos','agregar','categorias','promos','mayoristas','config'];
   document.querySelectorAll('.admin-tab').forEach((t,i)=>t.classList.toggle('active',names[i]===name));
   document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   if(name==='productos')renderAdminList();
   if(name==='categorias')renderAdminCats();
   if(name==='promos'){ loadPromosFromFirebase().then(()=>renderPromoList()); }
+  if(name==='mayoristas') loadMayAdmin();
 }
 
 function stockStatus(p){
@@ -1277,7 +1545,8 @@ function filterAdminList(val){
   renderAdminList(val||'',catF,stockF);
 }
 
-function recomputeStock(p){ p.stock = (p.sheetStock===1 && !p.hidden) ? 1 : 0; }
+// En mayorista solo se muestran los que tienen stock Y precio mayorista (col AH)
+function recomputeStock(p){ p.stock = (p.sheetStock===1 && !p.hidden && (!IS_MAY || p.may>0)) ? 1 : 0; }
 
 function toggleStock(id){
   const p=products.find(x=>x.id===id);
@@ -1545,6 +1814,11 @@ function cuota3(i){
 }
 // Totales del carrito con el descuento del código aplicado
 function computeTotals(){
+  if(IS_MAY){
+    const cash = Object.values(cart).reduce((s,i)=>s+i.oferta*i.qty,0);
+    const m = mayTotals(cash);
+    return {cash, cashDisc:m.disc, cashFinal:m.final, cuota:0, cuotaFinal:0, cardTotal:m.final, pct:m.pct};
+  }
   const pct = _checkoutDiscountPct||0;
   let cash=0, cashDisc=0, cuota=0, cuotaDisc=0;
   Object.values(cart).forEach(i=>{
@@ -1560,6 +1834,10 @@ function computeTotals(){
 function openCheckoutModal(){
   const items = Object.values(cart);
   if(!items.length){ showToast('El carrito está vacío'); return; }
+  if(IS_MAY){
+    const sub = window._cartTotal||0, units = window._cartUnits||0;
+    if(sub < MAY_MIN || units < MAY_MIN_U){ showMayMin(sub, units); return; }
+  }
   _checkoutDiscountPct = 0;
   _checkoutHasCode = false;
   _checkoutPromo = null;
@@ -1573,8 +1851,13 @@ function openCheckoutModal(){
   document.getElementById('checkout-direccion').value = '';
   document.getElementById('checkout-localidad').value = '';
   document.getElementById('pay-alias').textContent = PAY_ALIAS;
+  if(IS_MAY && mayLead){
+    document.getElementById('checkout-nombre').value = mayLead.nombre||'';
+    document.getElementById('checkout-direccion').value = mayLead.direccion||'';
+    document.getElementById('checkout-localidad').value = mayLead.localidad||'';
+  }
   closeCart();
-  checkoutGoStep(1);
+  checkoutGoStep(IS_MAY ? 'pay' : 1);
   document.getElementById('checkout-overlay').classList.add('open');
 }
 
@@ -1598,6 +1881,7 @@ function checkoutSkipCode(){
 }
 
 function checkoutBackToCode(){
+  if(IS_MAY){ closeCheckoutModal(); openCart(); return; }
   if(_checkoutHasCode) checkoutGoStep(2);
   else checkoutGoStep(1);
 }
@@ -1608,6 +1892,12 @@ function renderPayOptions(){
   document.getElementById('pay-card-total').textContent = fmt(t.cardTotal);
   document.getElementById('pay-card-cuotas').textContent = `hasta 3 cuotas sin interés de ${fmt(t.cuotaFinal)}`;
   ['tr','ef'].forEach(k=>{
+    if(IS_MAY){
+      document.getElementById(`pay-${k}-old`).textContent = t.cashDisc>0 ? fmt(t.cash) : '';
+      document.getElementById(`pay-${k}-total`).textContent = fmt(t.cashFinal);
+      document.getElementById(`pay-${k}-save`).textContent = t.cashDisc>0 ? `Descuento por volumen ${t.pct}%: ahorrás ${fmt(t.cashDisc)}` : '';
+      return;
+    }
     document.getElementById(`pay-${k}-old`).textContent = ahorro>0 ? fmt(t.cardTotal) : '';
     document.getElementById(`pay-${k}-total`).textContent = fmt(t.cashFinal);
     document.getElementById(`pay-${k}-save`).textContent = ahorro>0 ? `Ahorrás ${fmt(ahorro)}` : '';
@@ -1656,17 +1946,24 @@ function updateCheckoutSummary(){
   const totalEl = document.getElementById('checkout-summary-total');
   const subEl = document.getElementById('checkout-summary-cuotas');
   const discDiv = document.getElementById('checkout-summary-discount');
-  if(_payMethod==='tarjeta'){
+  if(IS_MAY){
+    totalEl.textContent = `${fmt(t.cashFinal)} · ${_payMethod==='efectivo'?'Efectivo al recibir':'Transferencia'}`;
+    subEl.textContent = `${window._cartUnits||0} unidades · subtotal ${fmt(t.cash)}`;
+    if(t.pct>0){ discDiv.textContent = `Descuento por volumen ${t.pct}%: -${fmt(t.cashDisc)}`; discDiv.style.display='block'; }
+    else discDiv.style.display='none';
+  } else if(_payMethod==='tarjeta'){
     totalEl.textContent = `${fmt(t.cardTotal)} · Tarjeta`;
     subEl.textContent = `hasta 3 cuotas sin interés de ${fmt(t.cuotaFinal)} · te enviamos link de pago Getnet`;
   } else {
     totalEl.textContent = `${fmt(t.cashFinal)} · ${_payMethod==='efectivo'?'Efectivo al recibir':'Transferencia'}`;
     subEl.textContent = t.cardTotal>t.cashFinal ? `Con tarjeta: ${fmt(t.cardTotal)}` : '';
   }
-  if(_checkoutDiscountPct>0){
-    discDiv.textContent = `Código ${_checkoutDiscountPct}% aplicado`;
-    discDiv.style.display = 'block';
-  } else { discDiv.style.display = 'none'; }
+  if(!IS_MAY){
+    if(_checkoutDiscountPct>0){
+      discDiv.textContent = `Código ${_checkoutDiscountPct}% aplicado`;
+      discDiv.style.display = 'block';
+    } else { discDiv.style.display = 'none'; }
+  }
   const note = document.getElementById('ship-note');
   const s = shippingInfo();
   note.textContent = s ? s.txt : '';
@@ -1674,6 +1971,7 @@ function updateCheckoutSummary(){
 }
 
 function sendToWhatsApp(){
+  if(IS_MAY) return sendMayWhatsApp();
   const nombre = document.getElementById('checkout-nombre').value.trim();
   const direccion = document.getElementById('checkout-direccion').value.trim();
   const localidad = document.getElementById('checkout-localidad').value.trim();
@@ -1895,7 +2193,8 @@ window.addEventListener('popstate', (e)=>{
 let pendingProductId = null;
 let pendingCat = null;
 (function readRoute(){
-  const path=decodeURIComponent(window.location.pathname);
+  let path=decodeURIComponent(window.location.pathname);
+  if(IS_MAY){ path=path.replace(/^\/mayoristas/i,''); if(!path) path='/'; }
   if(path.startsWith('/producto/')){
     const id=parseInt(path.split('/')[2]);
     if(!isNaN(id)) pendingProductId = id;
@@ -2004,6 +2303,7 @@ async function loadProductsFromSheets(){
     const precioOferta = cleanNum(cellVal(row, 18));
     const descuento = parseInt(String(cellVal(row, 19)).replace(/[^0-9]/g,'')) || 0;
     const {cuotas, ncuotas} = parseCuotas(String(cellVal(row, 22)).trim());
+    const precioMay = cleanNum(cellVal(row, MAY_COL));
     const descLarga = String(cellVal(row, 30)).trim();
     if(!precioOferta && !precioLista) return;
 
@@ -2015,8 +2315,14 @@ async function loadProductsFromSheets(){
       lista: precioLista || precioOferta, oferta: precioOferta || precioLista,
       off: descuento, cuotas, ncuotas,
       qtyStock, sheetStock, hidden:false, stock: sheetStock,
-      cat, imgUrl: imagenesMap[codigo] || '', img2:'', img3:''
+      cat, imgUrl: imagenesMap[codigo] || '', img2:'', img3:'',
+      may: precioMay
     };
+    if(IS_MAY){
+      // En la web mayorista el precio que manda es el de la columna AH (sin cuotas ni % off)
+      p.retail = p.oferta; p.oferta = precioMay; p.lista = precioMay; p.off = 0; p.cuotas = 0;
+    }
+    recomputeStock(p);
     p.icon = iconFor(p);
     newProducts.push(p);
   });
@@ -2162,6 +2468,7 @@ async function initData(){
     const [ok] = await Promise.all([loadProductsFromSheets(), loadFirebaseData()]);
     if(ok){
       applyFirebaseToProducts();
+      if(IS_MAY) restoreMayCart();
       syncCartWithProducts();
     } else {
       sheetsFailed = true;
@@ -2178,6 +2485,338 @@ async function initData(){
 }
 
 function retryLoad(){ initData(); }
+
+// ============================================================
+// MAYORISTA: escalas, carrito, datos del cliente
+// ============================================================
+function mayTierPct(sub){ let p=0; MAY_TIERS.forEach(t=>{ if(sub>=t.min) p=t.pct; }); return p; }
+function mayTotals(sub){ const pct=mayTierPct(sub); const disc=Math.round(sub*pct/100); return {sub,pct,disc,final:sub-disc}; }
+function mayNextTier(sub){ return MAY_TIERS.find(t=>sub<t.min)||null; }
+const CHECK_SVG = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px"><path d="M5 12l5 5L20 7"/></svg>';
+
+function renderMayTiers(sub){
+  const el=document.getElementById('may-tiers');
+  if(!el) return;
+  if(!mayLead){ el.classList.remove('on'); return; }
+  if(!el.dataset.built){
+    el.innerHTML=`<div class="mt-head">
+        <div class="mt-hello" id="mt-hello"></div>
+        <div class="mt-pay">Precios mayoristas · Solo efectivo o transferencia</div>
+      </div>
+      <div class="mt-grid">
+        <div class="mt-cell min" data-min="${MAY_MIN}"><span class="mt-ok">${CHECK_SVG} CUMPLIDO</span><div class="mt-k">Compra mínima</div><div class="mt-v">${fmt(MAY_MIN)}</div><div class="mt-d">y ${MAY_MIN_U} unidades, pueden ser surtidas</div></div>
+        ${MAY_TIERS.map(t=>`<div class="mt-cell" data-min="${t.min}"><span class="mt-ok">${CHECK_SVG} ALCANZADO</span><div class="mt-k">Desde ${fmt(t.min)}</div><div class="mt-v">${t.pct}% OFF</div><div class="mt-d">en todo el pedido</div></div>`).join('')}
+      </div>`;
+    el.dataset.built='1';
+  }
+  el.classList.add('on');
+  const first=String(mayLead.nombre||'').split(' ')[0];
+  document.getElementById('mt-hello').innerHTML=`Hola <strong>${esc(first)}</strong>${mayLead.comercio?' · '+esc(mayLead.comercio):''}<button onclick="openMayGate()">Cambiar mis datos</button>`;
+  const units=window._cartUnits||0;
+  el.querySelectorAll('.mt-cell').forEach(c=>{
+    const min=+c.dataset.min;
+    const ok = c.classList.contains('min') ? (sub>=min && units>=MAY_MIN_U) : sub>=min;
+    c.classList.toggle('reached', ok);
+  });
+}
+
+function renderMayGoals(sub, units, t){
+  const el=document.getElementById('may-goals');
+  if(!el) return;
+  const goals=[{lbl:'Mínimo',min:MAY_MIN}].concat(MAY_TIERS.map(x=>({lbl:x.pct+'% OFF',min:x.min})));
+  if(!el.dataset.built){
+    el.innerHTML=`<div class="mgo-msg" id="mgo-msg"></div>`+
+      goals.map((g,i)=>`<div class="mgo-row" id="mgo-r${i}"><span class="mgo-lbl">${g.lbl}</span><div class="mgo-bar"><div class="mgo-fill"></div></div><span class="mgo-val"></span></div>`).join('')+
+      `<div class="mgo-units" id="mgo-units"><div class="mgo-row"><span class="mgo-lbl">Unid.</span><div class="mgo-bar"><div class="mgo-fill"></div></div><span class="mgo-val"></span></div><div class="mgo-note">Mínimo ${MAY_MIN_U} unidades, pueden ser surtidas.</div></div>`;
+    el.dataset.built='1';
+  }
+  let msg;
+  if(!units) msg=`Armá tu pedido: el mínimo es de <strong>${fmt(MAY_MIN)}</strong> y ${MAY_MIN_U} unidades surtidas.`;
+  else if(sub<MAY_MIN) msg=`Te faltan <strong>${fmt(MAY_MIN-sub)}</strong> para el mínimo de compra (${fmt(MAY_MIN)}).`;
+  else if(!t.pct){ const n=MAY_TIERS[0]; msg=`Ya llegaste al mínimo. Te faltan <strong>${fmt(n.min-sub)}</strong> para el ${n.pct}% de descuento.`; }
+  else {
+    const n=mayNextTier(sub);
+    msg=`Estás ahorrando <strong class="save">${fmt(t.disc)}</strong> (${t.pct}% OFF).`+(n?` Te faltan <strong>${fmt(n.min-sub)}</strong> para el ${n.pct}%.`:' Tenés el descuento máximo.');
+  }
+  document.getElementById('mgo-msg').innerHTML=msg;
+  goals.forEach((g,i)=>{
+    const row=document.getElementById('mgo-r'+i);
+    const done=sub>=g.min;
+    row.classList.toggle('done',done);
+    row.querySelector('.mgo-fill').style.width=Math.min(100,sub/g.min*100)+'%';
+    row.querySelector('.mgo-val').innerHTML=done?CHECK_SVG+' Listo':fmt(g.min);
+  });
+  const u=document.getElementById('mgo-units');
+  if(units>0 && units<MAY_MIN_U){
+    u.style.display='';
+    u.querySelector('.mgo-fill').style.width=(units/MAY_MIN_U*100)+'%';
+    u.querySelector('.mgo-val').textContent=`${units} de ${MAY_MIN_U}`;
+  } else u.style.display='none';
+}
+
+function renderMaySum(t){
+  const el=document.getElementById('may-sum');
+  if(!el) return;
+  if(!t.sub){ el.innerHTML=''; return; }
+  el.innerHTML=`<div class="ms-row"><span>Subtotal</span><span>${fmt(t.sub)}</span></div>`+
+    (t.pct?`<div class="ms-row disc"><span>Descuento por volumen ${t.pct}%</span><span>-${fmt(t.disc)}</span></div>`:'');
+}
+
+function showMayMin(sub, units){
+  const li=[];
+  if(sub<MAY_MIN) li.push(`<li>Te faltan <b>${fmt(MAY_MIN-sub)}</b> para llegar a ${fmt(MAY_MIN)}.</li>`);
+  if(units<MAY_MIN_U){ const f=MAY_MIN_U-units; li.push(`<li>Te ${f===1?'falta':'faltan'} <b>${f} unidad${f===1?'':'es'}</b>. Podés sumar cualquier producto.</li>`); }
+  document.getElementById('mm-list').innerHTML=li.join('');
+  document.getElementById('may-min').classList.add('open');
+}
+function closeMayMin(){ document.getElementById('may-min').classList.remove('open'); }
+
+// Carrito guardado en el navegador del cliente
+function saveMayCartLocal(){
+  if(!mayCartRestored) return;
+  const o={}; Object.values(cart).forEach(i=>o[i.id]=i.qty);
+  lsSet('nx_may_cart', JSON.stringify(o));
+}
+function restoreMayCart(){
+  if(mayCartRestored) return;
+  mayCartRestored = true;
+  let o={}; try{ o=JSON.parse(lsGet('nx_may_cart')||'{}')||{}; }catch(e){}
+  Object.keys(o).forEach(id=>{
+    const p=products.find(x=>x.id==id);
+    const q=parseInt(o[id],10);
+    if(p && p.stock===1 && q>0) cart[p.id]={...p,qty:Math.min(q,maxQty(p))};
+  });
+}
+
+// Firebase sin login (solo escribe datos del cliente y su carrito)
+async function fbPublic(path, method, body){
+  const opts={method, headers:{'Content-Type':'application/json'}};
+  if(body!==undefined) opts.body=JSON.stringify(body);
+  const r=await fetchWithTimeout(`${FB_URL}/${path}.json`, 8000, opts);
+  if(!r.ok) throw new Error('FB '+r.status);
+  return r;
+}
+function newLeadId(){
+  try{ if(crypto && crypto.randomUUID) return crypto.randomUUID().replace(/-/g,''); }catch(e){}
+  return Date.now().toString(36)+Math.random().toString(36).slice(2,12)+Math.random().toString(36).slice(2,12);
+}
+function saveLeadRemote(){
+  if(!mayLead) return Promise.resolve();
+  return fbPublic(`mayoristas/leads/${mayLead.id}`,'PUT',mayLead).catch(e=>console.log('Lead no guardado:',e.message));
+}
+
+let _maySyncTimer=null;
+function mayCartSig(){ return Object.values(cart).map(i=>i.id+':'+i.qty).sort().join(','); }
+function scheduleMayCartSync(){
+  if(!mayLead || !mayCartRestored) return;
+  clearTimeout(_maySyncTimer);
+  _maySyncTimer=setTimeout(syncMayCart,1500);
+}
+async function syncMayCart(){
+  if(!mayLead) return;
+  const sig=mayCartSig();
+  if(sig===lsGet('nx_may_sig')) return;
+  const path=`mayoristas/carritos/${mayLead.id}`;
+  const items=Object.values(cart);
+  try{
+    if(!items.length) await fbPublic(path,'DELETE');
+    else{
+      const sub=items.reduce((s,i)=>s+i.oferta*i.qty,0);
+      const t=mayTotals(sub);
+      const it={}; items.forEach(i=>it[i.id]={n:i.name,q:i.qty,p:i.oferta});
+      await fbPublic(path,'PUT',{
+        leadId:mayLead.id, nombre:mayLead.nombre, comercio:mayLead.comercio||'', telefono:mayLead.telefono,
+        items:it, subtotal:t.sub, descPct:t.pct, total:t.final,
+        unidades:items.reduce((s,i)=>s+i.qty,0), estado:'abierto', updatedAt:Date.now()
+      });
+    }
+    lsSet('nx_may_sig',sig);
+  }catch(e){ console.log('Carrito no sincronizado:',e.message); }
+}
+async function markMaySent(){
+  if(!mayLead) return;
+  clearTimeout(_maySyncTimer);
+  await syncMayCart();
+  try{ await fbPublic(`mayoristas/carritos/${mayLead.id}`,'PATCH',{estado:'enviado',enviadoAt:Date.now()}); }
+  catch(e){ console.log('No se marcó el envío:',e.message); }
+}
+
+// Formulario de acceso
+function openMayGate(){
+  const l=mayLead||{};
+  document.getElementById('gt-nombre').value=l.nombre||'';
+  document.getElementById('gt-comercio').value=l.comercio||'';
+  document.getElementById('gt-email').value=l.email||'';
+  document.getElementById('gt-tel').value=l.telefono||'';
+  document.getElementById('gt-dir').value=l.direccion||'';
+  document.getElementById('gt-loc').value=l.localidad||'';
+  document.getElementById('gt-err').textContent='';
+  document.getElementById('may-gate').classList.add('open');
+  setTimeout(()=>{ const f=document.getElementById('gt-nombre'); if(f && !f.value) f.focus(); },60);
+}
+async function submitMayGate(e){
+  e.preventDefault();
+  const v=id=>document.getElementById(id).value.trim();
+  const d={nombre:v('gt-nombre'),comercio:v('gt-comercio'),email:v('gt-email'),telefono:v('gt-tel'),direccion:v('gt-dir'),localidad:v('gt-loc')};
+  const err=document.getElementById('gt-err');
+  if(!d.nombre||!d.email||!d.telefono||!d.direccion||!d.localidad){ err.textContent='Completá todos los campos obligatorios.'; return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email)){ err.textContent='Revisá el email.'; return; }
+  if(d.telefono.replace(/\D/g,'').length<8){ err.textContent='Revisá el número de teléfono.'; return; }
+  const now=Date.now();
+  mayLead=Object.assign({id:(mayLead&&mayLead.id)||newLeadId(), ts:(mayLead&&mayLead.ts)||now}, d, {lastSeen:now});
+  lsSet('nx_may_lead', JSON.stringify(mayLead));
+  const btn=document.getElementById('gt-submit');
+  btn.disabled=true;
+  await Promise.race([saveLeadRemote(), new Promise(r=>setTimeout(r,2500))]);
+  btn.disabled=false;
+  document.getElementById('may-gate').classList.remove('open');
+  lsSet('nx_may_sig','__');  // fuerza a subir el carrito con los datos nuevos
+  renderCats(); renderGrid(); updateCart();
+  if(dataReady){ try{ handlePendingRoute(); }catch(e){} }
+}
+
+function sendMayWhatsApp(){
+  const nombre=document.getElementById('checkout-nombre').value.trim();
+  const direccion=document.getElementById('checkout-direccion').value.trim();
+  const localidad=document.getElementById('checkout-localidad').value.trim();
+  if(!_payMethod){ checkoutGoStep('pay'); showToast('Elegí un medio de pago'); return; }
+  if(!nombre||!direccion||!localidad){ showToast('Completá todos los datos para continuar'); return; }
+  const items=Object.values(cart);
+  const units=items.reduce((s,i)=>s+i.qty,0);
+  const t=computeTotals();
+  if(t.cash<MAY_MIN || units<MAY_MIN_U){ closeCheckoutModal(); showMayMin(t.cash,units); return; }
+  const lineas=items.map(i=>`- #${i.id} ${i.name} (x${i.qty}) - ${fmt(i.oferta*i.qty)}`).join('\n');
+  let text=`Hola! Quisiera realizar el siguiente PEDIDO MAYORISTA:\n\n${lineas}\n\n`;
+  text+=`Unidades: ${units}\nSubtotal: ${fmt(t.cash)}\n`;
+  if(t.pct) text+=`Descuento por volumen (${t.pct}%): -${fmt(t.cashDisc)}\n`;
+  text+=`TOTAL ${_payMethod==='transferencia'?'POR TRANSFERENCIA':'EN EFECTIVO'}: ${fmt(t.cashFinal)}\n`;
+  text+=`Medio de pago: ${PAY_NAMES[_payMethod]}\n\n`;
+  const s=shippingInfo();
+  if(s) text+=`${s.txt}\n\n`;
+  const l=mayLead||{};
+  text+=`Datos del cliente:\nNombre: ${nombre}\n`;
+  if(l.comercio) text+=`Comercio: ${l.comercio}\n`;
+  text+=`Dirección: ${direccion}\nLocalidad: ${localidad}\n`;
+  if(l.telefono) text+=`Teléfono: ${l.telefono}\n`;
+  if(l.email) text+=`Email: ${l.email}`;
+  closeCheckoutModal(); closeCart();
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(text)}`,'_blank');
+  markMaySent();
+}
+
+// ============================================================
+// ADMIN: clientes mayoristas
+// ============================================================
+let mayAdmData=null;
+function fdate(ts){ return ts ? new Date(ts).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}) : '-'; }
+function ago(ts){
+  if(!ts) return '';
+  const m=Math.round((Date.now()-ts)/60000);
+  if(m<1) return 'recién';
+  if(m<60) return `hace ${m} min`;
+  const h=Math.round(m/60); if(h<24) return `hace ${h} h`;
+  const d=Math.round(h/24); return `hace ${d} día${d!==1?'s':''}`;
+}
+function waNum(tel){
+  let d=String(tel||'').replace(/\D/g,'');
+  if(!d) return '';
+  if(d.startsWith('54')) return d;
+  d=d.replace(/^0/,'');
+  return '549'+d;
+}
+async function loadMayAdmin(){
+  const list=document.getElementById('may-adm-list');
+  list.innerHTML='<div class="promo-empty">Cargando...</div>';
+  try{
+    mayAdmData = (await fbAuthed('mayoristas','GET')) || {};
+    renderMayAdmin();
+  }catch(e){
+    list.innerHTML='<div class="promo-empty">No se pudieron leer los datos. Revisá que estén cargadas las reglas nuevas de Firebase.</div>';
+  }
+}
+function mayAdmRows(){
+  const leads=(mayAdmData&&mayAdmData.leads)||{};
+  const carts=(mayAdmData&&mayAdmData.carritos)||{};
+  return Object.keys(leads).map(id=>{
+    const l=leads[id]||{}, c=carts[id]||null;
+    const estado=!c?'sin':(c.estado==='enviado'?'enviado':'abierto');
+    const act=Math.max(l.lastSeen||0,l.ts||0,c?(c.updatedAt||0):0,c?(c.enviadoAt||0):0);
+    return {id,l,c,estado,act};
+  }).sort((a,b)=>b.act-a.act);
+}
+function renderMayAdmin(){
+  const list=document.getElementById('may-adm-list');
+  if(!mayAdmData){ list.innerHTML=''; return; }
+  const all=mayAdmRows();
+  const f=document.getElementById('may-adm-filter').value;
+  const rows=f?all.filter(r=>r.estado===f):all;
+  const abiertos=all.filter(r=>r.estado==='abierto');
+  const sumAb=abiertos.reduce((s,r)=>s+(r.c.total||0),0);
+  document.getElementById('may-adm-stats').innerHTML=
+    `<div class="mad-stat"><b>${all.length}</b>interesados</div>`+
+    `<div class="mad-stat"><b>${abiertos.length}</b>carritos sin confirmar (${fmt(sumAb)})</div>`+
+    `<div class="mad-stat"><b>${all.filter(r=>r.estado==='enviado').length}</b>pedidos enviados</div>`;
+  if(!rows.length){ list.innerHTML='<div class="promo-empty">No hay clientes en este filtro.</div>'; return; }
+  list.innerHTML=rows.map(({id,l,c,estado})=>{
+    const first=String(l.nombre||'').split(' ')[0];
+    let st='Sin carrito';
+    if(estado==='abierto') st=`Carrito sin confirmar · ${fmt(c.total||0)} · ${c.unidades||0} u. · ${ago(c.updatedAt)}`;
+    if(estado==='enviado') st=`Pedido enviado · ${fmt(c.total||0)} · ${fdate(c.enviadoAt)}`;
+    const msg = estado==='abierto'
+      ? `Hola ${first}! Te escribimos de Nexar Store. Vimos que armaste un pedido mayorista por ${fmt(c.total||0)}. ¿Te ayudamos a finalizarlo?`
+      : `Hola ${first}! Te escribimos de Nexar Store por la web mayorista. ¿Te podemos ayudar con algo?`;
+    const wn=waNum(l.telefono);
+    const itemsHtml = c && c.items ? Object.keys(c.items).map(pid=>{ const it=c.items[pid]||{}; return `<li>#${esc(pid)} ${esc(it.n)} x${it.q} · ${fmt((it.p||0)*(it.q||0))}</li>`; }).join('') : '';
+    return `<div class="mad-item">
+      <div class="mad-top">
+        <div class="mad-main">
+          <div class="mad-name">${esc(l.nombre)}${l.comercio?` <span>· ${esc(l.comercio)}</span>`:''}</div>
+          <div class="mad-meta">${esc(l.email)} · ${esc(l.telefono)}</div>
+          <div class="mad-meta">${esc(l.direccion)}, ${esc(l.localidad)}</div>
+          <div class="mad-meta">Alta: ${fdate(l.ts)} · Última visita: ${fdate(l.lastSeen)}</div>
+        </div>
+        <div class="mad-status ${estado}">${st}</div>
+      </div>
+      ${itemsHtml?`<details class="mad-cart"><summary>Ver carrito${c.descPct?` (incluye ${c.descPct}% off)`:''}</summary><ul>${itemsHtml}</ul></details>`:''}
+      <div class="mad-actions">
+        ${wn?`<a class="wa" href="https://wa.me/${wn}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">WhatsApp</a>`:''}
+        ${l.email?`<a href="mailto:${esc(l.email)}">Mail</a>`:''}
+        <button class="del" onclick="deleteMayLead('${esc(id)}')">Eliminar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function deleteMayLead(id){
+  if(!confirm('¿Eliminar este cliente y su carrito?')) return;
+  try{
+    await fbWrite(`mayoristas/carritos/${id}`,'DELETE');
+    await fbWrite(`mayoristas/leads/${id}`,'DELETE');
+    if(mayAdmData){ if(mayAdmData.leads) delete mayAdmData.leads[id]; if(mayAdmData.carritos) delete mayAdmData.carritos[id]; }
+    renderMayAdmin(); showToast('Cliente eliminado');
+  }catch(e){ showToast('No se pudo eliminar'); }
+}
+function exportMayCSV(){
+  if(!mayAdmData){ showToast('Primero cargá la lista'); return; }
+  const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+  const head=['Nombre','Comercio','Email','Telefono','Direccion','Localidad','Alta','Ultima visita','Estado carrito','Total carrito','Unidades','Actualizado'];
+  const lines=mayAdmRows().map(({l,c,estado})=>[l.nombre,l.comercio,l.email,l.telefono,l.direccion,l.localidad,fdate(l.ts),fdate(l.lastSeen),
+    estado==='abierto'?'Sin confirmar':(estado==='enviado'?'Enviado':'Sin carrito'),c?c.total:'',c?c.unidades:'',c?fdate(c.enviadoAt||c.updatedAt):''].map(q).join(';'));
+  const blob=new Blob(['﻿'+[head.map(q).join(';')].concat(lines).join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`mayoristas_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
+// Arranque del modo mayorista
+if(IS_MAY){
+  document.title='NexarStore · Mayorista';
+  document.getElementById('logo-link').href='/mayoristas';
+  document.getElementById('cart-title').textContent='Pedido mayorista';
+  document.getElementById('wa-float').href=`https://wa.me/${WA}?text=${encodeURIComponent('Hola! Tengo una consulta sobre la compra mayorista.')}`;
+  if(!mayLead) openMayGate();
+  else { mayLead.lastSeen=Date.now(); lsSet('nx_may_lead',JSON.stringify(mayLead)); saveLeadRemote(); renderMayTiers(0); }
+}
 
 renderCats();
 initData();
